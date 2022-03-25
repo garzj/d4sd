@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "cmd-ts": "^0.10.0",
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "puppeteer": "^13.5.1"
   }
 }
