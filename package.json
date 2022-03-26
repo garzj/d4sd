@@ -11,7 +11,7 @@
     "dev": "export NODE_ENV=development || set NODE_ENV=development&& npx ts-node-dev -C ttypescript --respawn ./src/index.ts"
   },
   "author": "Johannes Garz <jojogarz123@gmail.com> (https://www.garz.tech/)",
-  "license": "UNLICENSED",
+  "license": "GPL-3.0 License",
   "bin": {
     "d4sd": "./lib/cli.js"
   },
