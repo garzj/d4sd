@@ -1,8 +1,8 @@
 # Data
 /data/
 
-# Build
-/lib/
+# Source
+/src/
 
 # Env files
 .env
