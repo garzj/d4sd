@@ -2,9 +2,18 @@
 
 import './config/env';
 
-import { command, number, option, positional, run, string } from 'cmd-ts';
+import {
+  command,
+  number,
+  option,
+  optional,
+  positional,
+  run,
+  string,
+} from 'cmd-ts';
 import { Shelf } from './Shelf';
 import * as minimatch from 'minimatch';
+import { prompt } from 'inquirer';
 
 const cmd = command({
   name: 'd4sd',
@@ -26,7 +35,7 @@ const cmd = command({
     password: option({
       long: 'password',
       short: 'p',
-      type: string,
+      type: optional(string),
       description: 'Your login password.',
     }),
     concurrency: option({
@@ -47,7 +56,14 @@ const cmd = command({
   handler: async (args) => {
     const shelf = await Shelf.load({
       email: args.email,
-      password: args.password,
+      password:
+        args.password ||
+        (
+          await prompt({
+            name: 'password',
+            type: 'password',
+          })
+        ).password,
     });
 
     try {

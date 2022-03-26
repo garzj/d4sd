@@ -16,6 +16,7 @@
     "d4sd": "./lib/cli.js"
   },
   "devDependencies": {
+    "@types/inquirer": "^8.2.0",
     "@types/minimatch": "^3.0.5",
     "@types/node": "^17.0.23",
     "ts-node-dev": "^1.1.8",
@@ -26,6 +27,7 @@
   "dependencies": {
     "cmd-ts": "^0.10.0",
     "dotenv": "^16.0.0",
+    "inquirer": "^8.2.2",
     "minimatch": "^5.0.1",
     "puppeteer": "^13.5.1"
   }
