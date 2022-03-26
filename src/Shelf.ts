@@ -16,7 +16,7 @@ export class Shelf {
   static async load(options: Options) {
     const shelf = new Shelf(options);
     shelf.browser = await puppeteer.launch({
-      headless: process.env.NODE_ENV !== 'development',
+      headless: true,
     });
     await shelf.login();
     return shelf;
