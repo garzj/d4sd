@@ -52,8 +52,18 @@ const cmd = command({
 
     try {
       const itemRefs = await shelf.getItems();
+      let itemCount = 0;
       for (let itemRef of itemRefs) {
-        if (minimatch(itemRef.title, args.title)) {
+        if (
+          minimatch(itemRef.title, args.title, {
+            nocase: true,
+            dot: true,
+            noglobstar: true,
+            nocomment: true,
+          })
+        ) {
+          itemCount++;
+
           console.log(`Resolving "${itemRef.title}"...`);
           const item = await itemRef.resolve();
           if (!item) {
@@ -66,6 +76,12 @@ const cmd = command({
           await item.download(args.outDir, args.concurrency);
           console.log(`Successfully downloaded "${itemRef.title}"!`);
         }
+      }
+
+      if (itemCount === 0) {
+        console.error(
+          `No item matching the title "${args.title}" could be found.`
+        );
       }
     } catch (e) {
       console.log(`Error: ${e}`);
