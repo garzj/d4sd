@@ -6,22 +6,43 @@ export class DigiBook extends Item {
   async download(outDir: string, concurrency = 10) {
     const dir = await this.mkSubDir(outDir);
 
+    // Get url of 1st svg page
+    const checkPage = await this.shelf.browser.newPage();
+    let page1Url: string;
+    try {
+      await checkPage.goto(new URL(`?page=1`, this.url).toString(), {
+        waitUntil: 'networkidle2',
+      });
+      page1Url = await checkPage.$eval(
+        '#pg1 > object',
+        (obj) => (obj as HTMLObjectElement).data
+      );
+    } finally {
+      await checkPage.close();
+    }
+
+    // Page download pool
     await promisePool(async (i, stop) => {
-      const bookPage = i + 1;
+      const pageNo = i + 1;
 
       const page = await this.shelf.browser.newPage();
       try {
+        // Go to current svg page
         const res = await page.goto(
-          new URL(`${bookPage}.svg`, this.url).toString(),
+          new URL(
+            page1Url.replace(new RegExp('1', 'g'), pageNo.toString()),
+            this.url
+          ).toString(),
           {
             waitUntil: 'networkidle2',
           }
         );
         if (res.status() !== 200) return stop();
 
+        // Save it as pdf
         await page.pdf({
           format: 'a4',
-          path: join(dir, `${bookPage}.pdf`),
+          path: join(dir, `${pageNo}.pdf`),
         });
       } finally {
         await page.close();
