@@ -16,10 +16,12 @@
     "d4sd": "./lib/cli.js"
   },
   "devDependencies": {
+    "@types/cookie": "^0.4.1",
     "@types/dotenv": "^8.2.0",
     "@types/inquirer": "^8.2.0",
     "@types/minimatch": "^3.0.5",
     "@types/node": "^17.0.23",
+    "@types/node-fetch": "^2.6.1",
     "ts-node-dev": "^1.1.8",
     "ts-transform-paths": "^2.0.3",
     "ttypescript": "^1.5.13",
@@ -27,9 +29,11 @@
   },
   "dependencies": {
     "cmd-ts": "^0.10.0",
+    "cookie": "^0.4.2",
     "dotenv": "^16.0.0",
     "inquirer": "^8.2.2",
     "minimatch": "^5.0.1",
+    "node-fetch": "^2.6.7",
     "puppeteer": "^13.5.1"
   }
 }
