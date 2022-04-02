@@ -13,7 +13,15 @@ Basic usage: `d4sd <title> -u <email> -o ./download/`
 
 The title also supports glob patterns.
 
-Example: `d4sd "Grundlagen d?? Elektrotechnik (2|3)*" -u john.doe@example.com -p <password> -o ./download/`
+### Examples
+
+```BASH
+# Download a specific book using a glob pattern
+d4sd 'Grundlagen d?? Elektrotechnik (2|3)*' -u john.doe@example.com -p <password> -o ./download/
+
+# Download your whole shelf
+d4sd '*' -u john.doe@example.com -p <password> -o ./download/
+```
 
 More options can be found with `d4sd -h`.
 
