@@ -54,16 +54,22 @@ const cmd = command({
     }),
   },
   handler: async (args) => {
+    let password: string;
+    if (args.password) {
+      password = args.password;
+    } else {
+      password = (
+        await prompt({
+          name: 'password',
+          type: 'password',
+        })
+      ).password;
+      console.log('');
+    }
+
     const shelf = await Shelf.load({
       email: args.email,
-      password:
-        args.password ||
-        (
-          await prompt({
-            name: 'password',
-            type: 'password',
-          })
-        ).password,
+      password,
     });
 
     try {
@@ -88,7 +94,7 @@ const cmd = command({
             );
           }
 
-          console.log(`Downloading ${itemRef.title}...`);
+          console.log(`Downloading "${itemRef.title}..."`);
           await item.download(args.outDir, args.concurrency);
           console.log(`Successfully downloaded "${itemRef.title}"!`);
         }
