@@ -30,14 +30,14 @@ export class DigiBook extends Item {
         // Go to current svg page
         const res = await page.goto(
           new URL(
-            page1Url.replace(new RegExp('1', 'g'), pageNo.toString()),
+            page1Url.replace(/(?<=\/)1(?=\.|$)/g, pageNo.toString()),
             this.url
           ).toString(),
           {
             waitUntil: 'networkidle2',
           }
         );
-        if (res.status() !== 200) return stop();
+        if (!res.ok()) return stop();
 
         // Save it as pdf
         await page.pdf({
