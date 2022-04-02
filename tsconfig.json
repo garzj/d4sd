@@ -4,7 +4,7 @@
     "declaration": true,
     "module": "CommonJS",
     "moduleResolution": "node",
-    "target": "es2015",
+    "target": "es2017",
     "lib": ["es6", "dom"],
     "types": ["node"],
     "typeRoots": ["node_modules/@types", "./typings"],
