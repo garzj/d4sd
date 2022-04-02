@@ -16,6 +16,7 @@
     "d4sd": "./lib/cli.js"
   },
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/inquirer": "^8.2.0",
     "@types/minimatch": "^3.0.5",
     "@types/node": "^17.0.23",
