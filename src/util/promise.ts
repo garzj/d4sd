@@ -1,13 +1,16 @@
 export async function promisePool<T>(
   factory: (i: number, stop: () => void) => Promise<T>,
-  concurrency = 10
+  concurrency = 10,
+  maxLoops = Infinity
 ): Promise<T[]> {
   let done: Promise<T>[] = [];
   let stoppers: Promise<T>[] = [];
   let running: Promise<T>[] = [];
 
-  for (let i = 0; stoppers.length === 0; ) {
-    while (stoppers.length === 0 && running.length < concurrency) {
+  let i = 0;
+  const isStopped = () => stoppers.length !== 0 || i >= maxLoops;
+  while (!isStopped()) {
+    while (!isStopped() && running.length < concurrency) {
       const promise = factory(i++, () => stoppers.push(promise));
       running.push(promise);
       promise.then(() => {
