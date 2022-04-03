@@ -1,9 +1,12 @@
 import { Shelf } from '@/Shelf';
 import { mkdir } from 'fs/promises';
 import { join } from 'path';
+import sanitize = require('sanitize-filename');
 
 export abstract class Item {
-  constructor(public shelf: Shelf, public url: string, public title: string) {}
+  constructor(public shelf: Shelf, public url: string, public title: string) {
+    this.title = sanitize(title);
+  }
 
   abstract download(outDir: string, concurrency?: number): Promise<void>;
 
