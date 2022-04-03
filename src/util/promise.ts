@@ -11,7 +11,10 @@ export async function promisePool<T>(
   const isStopped = () => stoppers.length !== 0 || i >= maxLoops;
   while (!isStopped()) {
     while (!isStopped() && running.length < concurrency) {
-      const promise = factory(i++, () => stoppers.push(promise));
+      const promise = factory(i++, async () => {
+        await Promise.resolve();
+        stoppers.push(promise);
+      });
       running.push(promise);
       promise.then(() => {
         running = running.filter((p) => p !== promise);
