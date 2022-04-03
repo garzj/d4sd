@@ -27,7 +27,8 @@ export class DigiDoc extends Item {
         },
       });
       const dest = createWriteStream(join(outDir, this.title));
-      res.body?.pipe(dest);
+      res.body.pipe(dest);
+      await new Promise((resolve) => dest.once('close', resolve));
     } finally {
       await page.close();
     }
