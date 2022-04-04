@@ -1,4 +1,4 @@
-import { promisePool } from '@/util/promise';
+import { delay, promisePool } from '@/util/promise';
 import { Book } from './Book';
 
 export class ScookBook extends Book {
@@ -41,7 +41,7 @@ export class ScookBook extends Book {
             )
           );
         } catch (e) {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await delay(1000);
           continue;
         }
         break;

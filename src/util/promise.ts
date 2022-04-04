@@ -30,3 +30,7 @@ export async function promisePool<T>(
 
   return await Promise.all(done);
 }
+
+export function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
