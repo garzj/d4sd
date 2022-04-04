@@ -32,12 +32,20 @@ export class ScookBook extends Book {
         waitUntil: 'networkidle2',
       });
 
-      pageCount = parseInt(
-        await page.$eval(
-          '#total-pages',
-          (totalPages) => (totalPages as HTMLSpanElement).innerText
-        )
-      );
+      while (true) {
+        try {
+          pageCount = parseInt(
+            await page.$eval(
+              '#total-pages',
+              (totalPages) => (totalPages as HTMLSpanElement).innerText
+            )
+          );
+        } catch (e) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          continue;
+        }
+        break;
+      }
 
       const img = await page.$('.image-div > img');
       if (!img) {
