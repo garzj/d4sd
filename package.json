@@ -1,6 +1,6 @@
 {
   "name": "d4sd",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A downloader for https://digi4school.at/.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -13,7 +13,7 @@
   "author": "Johannes Garz <jojogarz123@gmail.com> (https://www.garz.tech/)",
   "license": "GPL-3.0 License",
   "bin": {
-    "d4sd": "./lib/cli.js"
+    "d4sd": "lib/cli.js"
   },
   "devDependencies": {
     "@types/cookie": "^0.4.1",
@@ -37,5 +37,21 @@
     "pdfjs": "^2.4.7",
     "puppeteer": "^13.5.1",
     "sanitize-filename": "^1.6.3"
-  }
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garzj/d4sd.git"
+  },
+  "keywords": [
+    "digi4school",
+    "download",
+    "pdf"
+  ],
+  "bugs": {
+    "url": "https://github.com/garzj/d4sd/issues"
+  },
+  "homepage": "https://github.com/garzj/d4sd#readme"
 }
