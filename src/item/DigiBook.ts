@@ -1,4 +1,5 @@
 import { promisePool } from '@/util/promise';
+import { URL } from 'url';
 import { Book } from './Book';
 
 export class DigiBook extends Book {
@@ -29,15 +30,16 @@ export class DigiBook extends Book {
       const page = await this.shelf.browser.newPage();
       try {
         // Go to current svg page
-        const res = await page.goto(
-          new URL(
-            page1Url.replace(/(?<=\/)1(?=\.|$)/g, pageNo.toString()),
-            this.url
-          ).toString(),
-          {
-            waitUntil: 'networkidle2',
-          }
-        );
+        const base = this.url.replace(/(?<=\/)[^\/]+$/g, '');
+        const pageUrl = new URL(
+          page1Url
+            .slice(base.length)
+            .replace(/(?<=\/|^)1(?=\/|\.|$)/gm, pageNo.toString()),
+          base
+        ).toString();
+        const res = await page.goto(pageUrl, {
+          waitUntil: 'networkidle0',
+        });
         if (!res.ok()) return stop();
 
         // Save it as pdf
