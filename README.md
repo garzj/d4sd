@@ -25,6 +25,13 @@ d4sd '*' -u john.doe@example.com -p <password> -o ./download/
 
 More options can be found with `d4sd -h`.
 
+## Features
+
+- Digi4school books
+- Scook books
+- Archives with folders and additional documents
+- Typescript API
+
 ## Disclaimer
 
 This project is only for educational purposes. Don't download books with this tool please.
