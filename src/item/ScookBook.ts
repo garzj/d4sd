@@ -24,7 +24,7 @@ export class ScookBook extends Book {
 
     // Get page count, first page url
     let pageCount: number;
-    let page1Url: string;
+    let pageXUrl: string;
 
     const page = await this.shelf.browser.newPage();
     try {
@@ -51,7 +51,7 @@ export class ScookBook extends Book {
       if (!img) {
         throw 'Could not locate scook book page image.';
       }
-      page1Url = await img.evaluate((img) => (img as HTMLImageElement).src);
+      pageXUrl = await img.evaluate((img) => (img as HTMLImageElement).src);
     } finally {
       await page.close();
     }
@@ -64,7 +64,10 @@ export class ScookBook extends Book {
         const page = await this.shelf.browser.newPage();
         try {
           await page.goto(
-            page1Url.replace('-001', '-' + pageNo.toString().padStart(3, '0')),
+            pageXUrl.replace(
+              /(?<=-)[0-9]+(?=\.)/g,
+              pageNo.toString().padStart(3, '0')
+            ),
             {
               waitUntil: 'networkidle2',
             }
