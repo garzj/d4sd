@@ -14,11 +14,20 @@ import {
 import { Shelf } from './Shelf';
 import * as minimatch from 'minimatch';
 import { prompt } from 'inquirer';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+const { version } = JSON.parse(
+  readFileSync(join(__dirname, '../package.json')).toString()
+);
 
 const cmd = command({
   name: 'd4sd',
-  description: 'Downloads books from https://digi4school.at/',
-  version: '1.0.0',
+  description:
+    'Digi4school Downloader\n' +
+    'Downloads books from https://digi4school.at/\n' +
+    'GitHub: https://github.com/garzj/d4sd',
+  version,
   args: {
     title: positional({
       displayName: 'title',
