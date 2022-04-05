@@ -98,13 +98,18 @@ const cmd = command({
           console.log(`Resolving "${itemRef.title}"...`);
           const item = await itemRef.resolve();
           if (!item) {
-            return console.error(
-              `Failed to resolve item type of "${itemRef.title}".`
-            );
+            console.error(`Failed to resolve item type of "${itemRef.title}".`);
+            continue;
           }
 
           console.log(`Downloading "${itemRef.title}..."`);
-          await item.download(args.outDir, args.concurrency);
+          try {
+            await item.download(args.outDir, args.concurrency);
+          } catch (e) {
+            console.error(e);
+            console.error(`Failed to download "${itemRef.title}!"`);
+            continue;
+          }
           console.log(`Successfully downloaded "${itemRef.title}"!`);
         }
       }
