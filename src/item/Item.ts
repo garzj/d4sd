@@ -1,7 +1,8 @@
 import { Shelf } from '@/Shelf';
-import { mkdir } from 'fs/promises';
 import { join } from 'path';
 import sanitize = require('sanitize-filename');
+import { promises } from 'fs';
+const { mkdir } = promises;
 
 export abstract class Item {
   constructor(public shelf: Shelf, public url: string, public title: string) {

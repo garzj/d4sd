@@ -1,8 +1,9 @@
 import { createWriteStream } from 'fs';
-import { readFile, rm } from 'fs/promises';
 import { join } from 'path';
 import * as pdf from 'pdfjs';
 import { Item } from './Item';
+import { promises } from 'fs';
+const { readFile, rm } = promises;
 
 export abstract class Book extends Item {
   abstract download(
