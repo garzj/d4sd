@@ -8,7 +8,8 @@
     "build": "ttsc -p .",
     "start": "node ./lib/index.js",
     "deploy": "npm run build && npm start",
-    "dev": "export NODE_ENV=development || set NODE_ENV=development&& npx ts-node-dev -C ttypescript --respawn ./src/index.ts"
+    "dev": "export NODE_ENV=development || set NODE_ENV=development&& npx ts-node-dev -C ttypescript --respawn ./src/index.ts",
+    "prepack": "npm run build"
   },
   "author": "Johannes Garz <jojogarz123@gmail.com> (https://www.garz.tech/)",
   "license": "GPL-3.0 License",
