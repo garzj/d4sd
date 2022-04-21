@@ -1,9 +1,8 @@
-import { createWriteStream } from 'fs';
 import { join } from 'path';
-import * as pdf from 'pdfjs';
 import { Item } from './Item';
+import * as muhammara from 'muhammara';
 import { promises } from 'fs';
-const { readFile, rm } = promises;
+const { rm } = promises;
 
 export abstract class Book extends Item {
   abstract download(
@@ -17,19 +16,17 @@ export abstract class Book extends Item {
   }
 
   async mergePdfPages(subDir: string, pageCount: number) {
-    const mergedDoc = new pdf.Document();
+    const outFile = `${subDir}.pdf`;
+    const writeStream = new muhammara.PDFWStreamForFile(outFile);
+    const writer = muhammara.createWriter(writeStream);
 
     for (let pageNo = 1; pageNo <= pageCount; pageNo++) {
-      const pdfFile = this.getPdfPath(subDir, pageNo);
-      const buffer = await readFile(pdfFile);
-      const pdfDoc = new pdf.ExternalDocument(buffer);
-      mergedDoc.addPagesOf(pdfDoc);
+      const inFile = this.getPdfPath(subDir, pageNo);
+      writer.appendPDFPagesFromPDF(inFile);
     }
 
-    const writeStream = createWriteStream(`${subDir}.pdf`);
-    mergedDoc.pipe(writeStream);
-    await mergedDoc.end();
-    await new Promise((resolve) => writeStream.once('close', resolve));
+    writer.end();
+    await new Promise<void>((resolve) => writeStream.close(resolve));
 
     await rm(subDir, { recursive: true });
   }

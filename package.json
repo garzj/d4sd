@@ -33,13 +33,10 @@
     "dotenv": "^16.0.0",
     "inquirer": "^8.2.2",
     "minimatch": "^5.0.1",
+    "muhammara": "^2.2.0",
     "node-fetch": "^2.6.7",
-    "pdfjs": "^2.4.7",
     "puppeteer": "^13.6.0",
     "sanitize-filename": "^1.6.3"
-  },
-  "overrides": {
-    "minimist": "1.2.6"
   },
   "directories": {
     "lib": "lib"
