@@ -26,8 +26,12 @@ export class DigiDoc extends Item {
           cookie: serializeCookies(cookies),
         },
       });
+
       const dest = createWriteStream(join(outDir, this.title));
+
+      if (!res.body) return;
       res.body.pipe(dest);
+
       await new Promise((resolve) => dest.once('close', resolve));
     } finally {
       await page.close();

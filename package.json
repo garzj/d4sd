@@ -17,11 +17,10 @@
     "d4sd": "lib/cli.js"
   },
   "devDependencies": {
-    "@types/cookie": "^0.4.1",
-    "@types/dotenv": "^8.2.0",
-    "@types/inquirer": "^8.2.0",
+    "@types/cookie": "^0.5.1",
+    "@types/inquirer": "^8.2.1",
     "@types/minimatch": "^3.0.5",
-    "@types/node": "^17.0.23",
+    "@types/node": "^17.0.25",
     "@types/node-fetch": "^2.6.1",
     "ts-node-dev": "^1.1.8",
     "ts-transform-paths": "^2.0.3",
@@ -29,15 +28,18 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "cmd-ts": "^0.10.0",
-    "cookie": "^0.4.2",
+    "cmd-ts": "^0.10.1",
+    "cookie": "^0.5.0",
     "dotenv": "^16.0.0",
     "inquirer": "^8.2.2",
     "minimatch": "^5.0.1",
     "node-fetch": "^2.6.7",
     "pdfjs": "^2.4.7",
-    "puppeteer": "^13.5.1",
+    "puppeteer": "^13.6.0",
     "sanitize-filename": "^1.6.3"
+  },
+  "overrides": {
+    "minimist": "1.2.6"
   },
   "directories": {
     "lib": "lib"
