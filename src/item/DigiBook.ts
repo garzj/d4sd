@@ -43,12 +43,14 @@ export class DigiBook extends Book {
         if (!res.ok()) return stop();
 
         // Save it as pdf
-        const pdfFile = this.getPdfPath(dir, ++pageCount);
+        const pdfFile = this.getPdfPath(dir, pageNo);
 
         await page.pdf({
           format: 'a4',
           path: pdfFile,
         });
+
+        pageCount++;
       } finally {
         await page.close();
       }
