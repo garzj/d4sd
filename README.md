@@ -9,21 +9,21 @@ A downloader for https://digi4school.at/.
 
 ## Usage
 
-Basic usage: `d4sd <title> -u <email> -o ./download/`
+Basic usage  
+`d4sd <title> -u <email>`
 
-The title also supports glob patterns.
+Specify a password and an output folder  
+`d4sd <title> -u <email> -p <password> -o ./download/`
 
-### Examples
+Download a specific book using a glob pattern  
+`d4sd "Grundlagen d?? Elektrotechnik (2|3)*" -u john.doe@example.com -o ./download/`
 
-```BASH
-# Download a specific book using a glob pattern
-d4sd 'Grundlagen d?? Elektrotechnik (2|3)*' -u john.doe@example.com -p <password> -o ./download/
-
-# Download your whole shelf
-d4sd '*' -u john.doe@example.com -p <password> -o ./download/
-```
+Download your whole shelf  
+`d4sd "*" -u john.doe@example.com -p <password> -o ./download/`
 
 More options can be found with `d4sd -h`.
+
+**Note:** On Linux, make sure to use single quotes `'` instead of `"`.
 
 ## Features
 
