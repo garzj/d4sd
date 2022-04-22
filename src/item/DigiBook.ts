@@ -1,4 +1,5 @@
 import { promisePool } from '@/util/promise';
+import { waitForGoto } from '@/util/puppeteer';
 import { URL } from 'url';
 import { Book } from './Book';
 
@@ -37,9 +38,12 @@ export class DigiBook extends Book {
             .replace(/(?<=\/|^)1(?=\/|\.|$)/gm, pageNo.toString()),
           base
         ).toString();
-        const res = await page.goto(pageUrl, {
-          waitUntil: 'networkidle0',
-        });
+        const res = await waitForGoto(
+          page,
+          await page.goto(pageUrl, {
+            waitUntil: 'networkidle0',
+          })
+        );
         if (!res.ok()) return stop();
 
         // Save it as pdf
