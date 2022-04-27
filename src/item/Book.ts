@@ -5,12 +5,6 @@ import { promises } from 'fs';
 const { rm } = promises;
 
 export abstract class Book extends Item {
-  abstract download(
-    outDir: string,
-    concurrency?: number,
-    mergePdfs?: boolean
-  ): Promise<void>;
-
   getPdfPath(subDir: string, pageNo: number) {
     return join(subDir, `${pageNo}.pdf`);
   }

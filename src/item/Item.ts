@@ -2,6 +2,7 @@ import { Shelf } from '@/Shelf';
 import { join } from 'path';
 import sanitize = require('sanitize-filename');
 import { promises } from 'fs';
+import { DownloadOptions } from './download-options';
 const { mkdir } = promises;
 
 export abstract class Item {
@@ -9,7 +10,7 @@ export abstract class Item {
     this.title = sanitize(title);
   }
 
-  abstract download(outDir: string, concurrency?: number): Promise<void>;
+  abstract download(outDir: string, options?: DownloadOptions): Promise<void>;
 
   async mkSubDir(outDir: string) {
     const dir = join(outDir, this.title);

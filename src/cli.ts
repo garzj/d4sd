@@ -104,7 +104,7 @@ const cmd = command({
 
           console.log(`Downloading "${itemRef.title}..."`);
           try {
-            await item.download(args.outDir, args.concurrency);
+            await item.download(args.outDir, args);
           } catch (e) {
             console.error(e);
             console.error(`Failed to download "${itemRef.title}!"`);

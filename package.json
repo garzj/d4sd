@@ -30,6 +30,7 @@
   "dependencies": {
     "cmd-ts": "^0.10.1",
     "cookie": "^0.5.0",
+    "defaults-deep-ts": "^0.2.2",
     "dotenv": "^16.0.0",
     "inquirer": "^8.2.2",
     "minimatch": "^5.0.1",

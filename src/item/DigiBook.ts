@@ -2,10 +2,12 @@ import { promisePool } from '@/util/promise';
 import { waitForGoto } from '@/util/puppeteer';
 import { URL } from 'url';
 import { Book } from './Book';
+import { defDownloadOptions, DownloadOptions } from './download-options';
 
 export class DigiBook extends Book {
-  async download(outDir: string, concurrency = 10, mergePdfs = true) {
+  async download(outDir: string, _options?: DownloadOptions) {
     const dir = await this.mkSubDir(outDir);
+    const options = defDownloadOptions(_options);
 
     // Get url of 1st svg page
     const checkPage = await this.shelf.browser.newPage();
@@ -58,9 +60,9 @@ export class DigiBook extends Book {
       } finally {
         await page.close();
       }
-    }, concurrency);
+    }, options.concurrency);
 
     // Merge pdf pages
-    mergePdfs && (await this.mergePdfPages(dir, pageCount));
+    options.mergePdfs && (await this.mergePdfPages(dir, pageCount));
   }
 }

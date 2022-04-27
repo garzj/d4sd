@@ -9,6 +9,7 @@ import { Item } from './item/Item';
 import { ItemGroup } from './item/ItemGroup';
 import { ItemRef } from './item/ItemRef';
 import { ScookBook } from './item/ScookBook';
+import { DownloadOptions } from './item/download-options';
 
 export {
   Shelf,
@@ -20,4 +21,5 @@ export {
   ItemGroup,
   ItemRef,
   ScookBook,
+  DownloadOptions,
 };

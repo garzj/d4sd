@@ -1,9 +1,11 @@
 import { delay, promisePool } from '@/util/promise';
 import { Book } from './Book';
+import { defDownloadOptions, DownloadOptions } from './download-options';
 
 export class ScookBook extends Book {
-  async download(outDir: string, concurrency = 10, mergePdfs = true) {
+  async download(outDir: string, _options?: DownloadOptions) {
     const dir = await this.mkSubDir(outDir);
+    const options = defDownloadOptions(_options);
 
     // Get book frame url
     let bookFrameUrl: string;
@@ -92,11 +94,11 @@ export class ScookBook extends Book {
           await page.close();
         }
       },
-      concurrency,
+      options.concurrency,
       pageCount
     );
 
     // Merge pdf pages
-    mergePdfs && (await this.mergePdfPages(dir, pageCount));
+    options.mergePdfs && (await this.mergePdfPages(dir, pageCount));
   }
 }
