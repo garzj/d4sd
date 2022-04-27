@@ -52,7 +52,7 @@ export class DigiBook extends Book {
         const pdfFile = this.getPdfPath(dir, pageNo);
 
         await page.pdf({
-          format: 'a4',
+          format: options.format,
           path: pdfFile,
         });
 

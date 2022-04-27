@@ -16,6 +16,9 @@ import * as minimatch from 'minimatch';
 import { prompt } from 'inquirer';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { PaperFormat } from 'puppeteer';
+import { paperFormats } from 'puppeteer/lib/cjs/puppeteer/common/PDFOptions';
+import { hasOwnProperty } from './util/object';
 
 const { version } = JSON.parse(
   readFileSync(join(__dirname, '../package.json')).toString()
@@ -61,8 +64,22 @@ const cmd = command({
       defaultValue: () => '.',
       description: 'The directory, the item should be saved into.',
     }),
+    format: option({
+      long: 'format',
+      type: optional(string),
+      description: 'A puppeteer page format like "a4".',
+    }),
   },
   handler: async (args) => {
+    if (args.format && !hasOwnProperty(paperFormats, args.format)) {
+      console.error(
+        `Invalid page format specified. Possible options are: ${JSON.stringify(
+          Object.keys(paperFormats)
+        )}`
+      );
+      return;
+    }
+
     let password: string;
     if (args.password) {
       password = args.password;
@@ -104,7 +121,10 @@ const cmd = command({
 
           console.log(`Downloading "${itemRef.title}..."`);
           try {
-            await item.download(args.outDir, args);
+            await item.download(args.outDir, {
+              ...args,
+              format: args.format as PaperFormat,
+            });
           } catch (e) {
             console.error(e);
             console.error(`Failed to download "${itemRef.title}!"`);
