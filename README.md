@@ -28,7 +28,7 @@ More options can be found with `d4sd -h`.
 ## Features
 
 - Digi4school books
-- Scook books
+- "E-Book-Plus" (Scook books integrated to digi4school)
 - Archives with folders and additional documents
 - Typescript API
 
