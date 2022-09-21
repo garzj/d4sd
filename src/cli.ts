@@ -7,7 +7,7 @@ import {
   number,
   option,
   optional,
-  positional,
+  restPositionals,
   run,
   string,
 } from 'cmd-ts';
@@ -19,6 +19,7 @@ import { join } from 'path';
 import { PaperFormat } from 'puppeteer';
 import { paperFormats } from 'puppeteer/lib/cjs/puppeteer/common/PDFOptions';
 import { hasOwnProperty } from './util/object';
+import { ItemRef } from './item/ItemRef';
 
 const { version } = JSON.parse(
   readFileSync(join(__dirname, '../package.json')).toString()
@@ -32,11 +33,11 @@ const cmd = command({
     'GitHub: https://github.com/garzj/d4sd',
   version,
   args: {
-    title: positional({
-      displayName: 'title',
+    books: restPositionals({
+      displayName: 'books',
       type: string,
       description:
-        'The title of the book or archive you want to download. Supports glob patterns.',
+        'The titles or urls of books or archives you want to download. Supports glob patterns.',
     }),
     email: option({
       long: 'email',
@@ -86,6 +87,11 @@ const cmd = command({
       return;
     }
 
+    if (args.books.length < 1) {
+      console.error('Please specify at least one book title or url.');
+      return;
+    }
+
     let password: string;
     if (args.password) {
       password = args.password;
@@ -105,20 +111,50 @@ const cmd = command({
       timeout: args.timeout,
     });
 
-    try {
-      const itemRefs = await shelf.getItems();
-      let itemCount = 0;
-      for (let itemRef of itemRefs) {
-        if (
-          minimatch(itemRef.title, args.title, {
-            nocase: true,
-            dot: true,
-            noglobstar: true,
-            nocomment: true,
-          })
-        ) {
-          itemCount++;
+    let bookUrls: string[] = [];
+    let bookTitles: string[] = [];
+    for (const book of args.books) {
+      if (book.startsWith(Shelf.origin)) {
+        bookUrls.push(book);
+      } else {
+        bookTitles.push(book);
+      }
+    }
 
+    try {
+      let itemRefs = await shelf.getItems();
+
+      // Drop books not specified
+      itemRefs = itemRefs.filter(
+        (ref) =>
+          bookTitles.some((title) =>
+            minimatch(ref.title, title, {
+              nocase: true,
+              dot: true,
+              noglobstar: true,
+              nocomment: true,
+            })
+          ) ||
+          bookUrls.some(
+            (url) => url.replace(/\/$/, '') === ref.url.replace(/\/$/, '')
+          )
+      );
+
+      // Add the rest of the book urls with the url as title
+      for (const bookUrl of bookUrls) {
+        if (
+          !itemRefs.some(
+            (ref) => bookUrl.replace(/\/$/, '') === ref.url.replace(/\/$/, '')
+          )
+        ) {
+          itemRefs.push(new ItemRef(shelf, bookUrl, bookUrl));
+        }
+      }
+
+      if (itemRefs.length === 0) {
+        console.error(`No items matching your rules could be found.`);
+      } else {
+        for (const itemRef of itemRefs) {
           console.log(`Resolving "${itemRef.title}"...`);
           const item = await itemRef.resolve();
           if (!item) {
@@ -139,12 +175,6 @@ const cmd = command({
           }
           console.log(`Successfully downloaded "${itemRef.title}"!`);
         }
-      }
-
-      if (itemCount === 0) {
-        console.error(
-          `No item matching the title "${args.title}" could be found.`
-        );
       }
     } catch (e) {
       console.log(`Error: ${e}`);
