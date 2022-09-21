@@ -119,7 +119,7 @@ const cmd = command({
             continue;
           }
 
-          console.log(`Downloading "${itemRef.title}..."`);
+          console.log(`Downloading "${itemRef.title}"...`);
           try {
             await item.download(args.outDir, {
               ...args,
