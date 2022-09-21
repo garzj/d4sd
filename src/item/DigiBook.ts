@@ -15,6 +15,7 @@ export class DigiBook extends Book {
     try {
       await checkPage.goto(new URL(`?page=1`, this.url).toString(), {
         waitUntil: 'networkidle2',
+        timeout: this.shelf.options.timeout,
       });
       page1Url = await checkPage.$eval(
         '#pg1 > object',
@@ -44,6 +45,7 @@ export class DigiBook extends Book {
           page,
           await page.goto(pageUrl, {
             waitUntil: 'networkidle0',
+            timeout: this.shelf.options.timeout,
           })
         );
         if (!res.ok()) return stop();

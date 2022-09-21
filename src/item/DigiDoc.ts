@@ -16,6 +16,7 @@ export class DigiDoc extends Item {
       // Get archive cookies
       await page.goto(this.archive.url, {
         waitUntil: 'networkidle2',
+        timeout: this.shelf.options.timeout,
       });
       const cookies = await page.cookies();
 

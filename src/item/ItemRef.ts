@@ -11,7 +11,8 @@ export class ItemRef {
     const page = await this.shelf.browser.newPage();
     try {
       await page.goto(this.url, {
-        waitUntil: 'networkidle2',
+        waitUntil: 'load',
+        timeout: this.shelf.options.timeout,
       });
 
       const pageUrl = page.url();

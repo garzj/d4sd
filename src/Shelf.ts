@@ -1,19 +1,28 @@
 import * as puppeteer from 'puppeteer';
 import { ItemRef } from './item/ItemRef';
 
-interface Options {
+interface InitOptions {
   email: string;
   password: string;
+  timeout?: number;
 }
+
+type Options = Required<InitOptions>;
 
 export class Shelf {
   static origin = 'https://digi4school.at/';
 
+  options!: Options;
   browser!: puppeteer.Browser;
 
-  private constructor(public options: Options) {}
+  private constructor(options: InitOptions) {
+    this.options = {
+      ...options,
+      timeout: options.timeout ?? 60000,
+    };
+  }
 
-  static async load(options: Options) {
+  static async load(options: InitOptions) {
     const shelf = new Shelf(options);
     shelf.browser = await puppeteer.launch({
       headless: true,
@@ -25,9 +34,8 @@ export class Shelf {
   private async login() {
     const page = await this.browser.newPage();
     try {
-      await page.goto(new URL('/', Shelf.origin).toString(), {
-        waitUntil: 'networkidle2',
-      });
+      await page.goto(new URL('/', Shelf.origin).toString());
+      await page.waitForSelector('#login > button');
 
       await page.type('#email', this.options.email);
       await page.type('#password', this.options.password);
@@ -43,9 +51,8 @@ export class Shelf {
   async getItems(): Promise<ItemRef[]> {
     const page = await this.browser.newPage();
     try {
-      await page.goto(new URL('/ebooks', Shelf.origin).toString(), {
-        waitUntil: 'networkidle2',
-      });
+      await page.goto(new URL('/ebooks', Shelf.origin).toString());
+      await page.waitForSelector('#shelf > a');
 
       const itemLinks = await page.$$('#shelf > a');
 

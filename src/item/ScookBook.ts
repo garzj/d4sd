@@ -13,7 +13,8 @@ export class ScookBook extends Book {
     const userPage = await this.shelf.browser.newPage();
     try {
       await userPage.goto(this.url, {
-        waitUntil: 'networkidle2',
+        waitUntil: 'load',
+        timeout: this.shelf.options.timeout,
       });
 
       bookFrameUrl = await userPage.$eval(
@@ -31,7 +32,8 @@ export class ScookBook extends Book {
     const page = await this.shelf.browser.newPage();
     try {
       await page.goto(bookFrameUrl, {
-        waitUntil: 'networkidle2',
+        waitUntil: 'load',
+        timeout: this.shelf.options.timeout,
       });
 
       while (true) {
@@ -71,7 +73,8 @@ export class ScookBook extends Book {
               pageNo.toString().padStart(3, '0')
             ),
             {
-              waitUntil: 'networkidle2',
+              waitUntil: 'domcontentloaded',
+              timeout: this.shelf.options.timeout,
             }
           );
 

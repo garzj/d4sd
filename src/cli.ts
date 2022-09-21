@@ -69,6 +69,12 @@ const cmd = command({
       type: optional(string),
       description: 'A puppeteer page format like "a4".',
     }),
+    timeout: option({
+      long: 'timeout',
+      short: 't',
+      type: optional(number),
+      description: 'Terminates the download, when exceeded.',
+    }),
   },
   handler: async (args) => {
     if (args.format && !hasOwnProperty(paperFormats, args.format)) {
@@ -96,6 +102,7 @@ const cmd = command({
     const shelf = await Shelf.load({
       email: args.email,
       password,
+      timeout: args.timeout,
     });
 
     try {

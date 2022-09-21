@@ -15,6 +15,7 @@ export class Archive extends ItemGroup {
     try {
       await page.goto(this.url, {
         waitUntil: 'networkidle2',
+        timeout: this.shelf.options.timeout,
       });
 
       // Find archive directories: id -> name
