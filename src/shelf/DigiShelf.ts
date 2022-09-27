@@ -22,7 +22,13 @@ export class DigiShelf extends Shelf {
           page
             .waitForNavigation({ timeout: this.options.timeout })
             .then(() => true),
-          page.waitForSelector('div[role="dialog"]').then(() => false),
+          page
+            .waitForFunction(() =>
+              document
+                .querySelector('div[role="dialog"]')
+                ?.innerHTML.includes('Problem')
+            )
+            .then(() => false),
         ])
     );
   }
