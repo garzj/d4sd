@@ -32,8 +32,8 @@ const cmd = command({
   name: 'd4sd',
   description:
     'Digi4school Downloader\n' +
-    'Downloads books from https://digi4school.at/ and https://www.scook.at/\n' +
-    'GitHub: https://github.com/garzj/d4sd',
+    '> Downloads books from https://digi4school.at/ and https://www.scook.at/\n' +
+    '> GitHub: https://github.com/garzj/d4sd',
   version,
   args: {
     books: restPositionals({
