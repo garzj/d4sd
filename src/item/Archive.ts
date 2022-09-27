@@ -1,3 +1,4 @@
+import { ScrapeError } from '@/error/ScrapeError';
 import { DigiDoc } from './DigiDoc';
 import { Folder } from './Folder';
 import { ItemGroup } from './ItemGroup';
@@ -24,7 +25,9 @@ export class Archive extends ItemGroup {
           (a as HTMLLinkElement[]).map((a) => {
             const dirTitle = a.querySelector('h1')?.innerText;
             if (!dirTitle) {
-              throw `Could not find the title of a folder in archive with url ${window.location.href}.`;
+              throw new ScrapeError(
+                `Could not find the title of a folder in archive with url ${window.location.href}.`
+              );
             }
             return [parseInt(a.id), dirTitle];
           })
@@ -55,7 +58,9 @@ export class Archive extends ItemGroup {
             (a) => a.querySelector('h1')?.innerText
           );
           if (!title) {
-            throw `Could not find the title of an item with url ${url}.`;
+            throw new ScrapeError(
+              `Could not find the title of an item with url ${url}.`
+            );
           }
 
           let item: ItemRef | DigiDoc;
@@ -76,10 +81,14 @@ export class Archive extends ItemGroup {
               classList.find((className) => className !== 'sub')!
             );
             if (!isFinite(dirId)) {
-              throw `Could not determine the folder id of item "${title}" in archive with url ${this.url}.`;
+              throw new ScrapeError(
+                `Could not determine the folder id of item "${title}" in archive with url ${this.url}.`
+              );
             }
             if (!Object.prototype.hasOwnProperty.call(dirs, dirId)) {
-              throw `Could not match directory id ${dirId} to a directory in archive with url ${this.url}.`;
+              throw new ScrapeError(
+                `Could not match directory id ${dirId} to a directory in archive with url ${this.url}.`
+              );
             }
 
             dirs[dirId].items.push(item);

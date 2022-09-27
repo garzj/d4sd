@@ -1,3 +1,4 @@
+import { ScrapeError } from '@/error/ScrapeError';
 import { ItemRef } from '..';
 import { InitOptions, Shelf } from './Shelf';
 
@@ -45,7 +46,9 @@ export class DigiShelf extends Shelf {
             (a) => a.querySelector('h1')?.innerText
           );
           if (!title) {
-            throw `Could not find the title of item with url ${url}.`;
+            throw new ScrapeError(
+              `Could not find the title of item with url ${url}.`
+            );
           }
 
           return new ItemRef(this, url, title);

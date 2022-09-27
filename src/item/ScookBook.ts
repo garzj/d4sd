@@ -1,3 +1,4 @@
+import { ScrapeError } from '@/error/ScrapeError';
 import { delay, promisePool } from '@/util/promise';
 import { Book } from './Book';
 import { defDownloadOptions, DownloadOptions } from './download-options';
@@ -53,7 +54,7 @@ export class ScookBook extends Book {
 
       const img = await page.$('.image-div > img');
       if (!img) {
-        throw 'Could not locate scook book page image.';
+        throw new ScrapeError('Could not locate scook book page image.');
       }
       pageXUrl = await img.evaluate((img) => (img as HTMLImageElement).src);
     } finally {
