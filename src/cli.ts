@@ -122,7 +122,7 @@ const cmd = command({
     }
 
     try {
-      let itemRefs = await shelf.getItems();
+      let itemRefs = bookTitles.length > 0 ? await shelf.getItems() : [];
 
       // Drop books not specified
       itemRefs = itemRefs.filter(
