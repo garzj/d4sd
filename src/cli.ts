@@ -114,83 +114,87 @@ const cmd = command({
       console.log('');
     }
 
-    const shelf: Shelf = await (args.scook ? ScookShelf : DigiShelf).load({
-      user: args.user,
-      password,
-      timeout: args.timeout,
-    });
-
-    let bookUrls: string[] = [];
-    let bookTitles: string[] = [];
-    for (const book of args.books) {
-      if (book.startsWith(shelf.origin)) {
-        bookUrls.push(book);
-      } else {
-        bookTitles.push(book);
-      }
-    }
-
     try {
-      let itemRefs = bookTitles.length > 0 ? await shelf.getItems() : [];
+      const shelf: Shelf = await (args.scook ? ScookShelf : DigiShelf).load({
+        user: args.user,
+        password,
+        timeout: args.timeout,
+      });
 
-      // Drop books not specified
-      itemRefs = itemRefs.filter(
-        (ref) =>
-          bookTitles.some((title) =>
-            minimatch(ref.title, title, {
-              nocase: true,
-              dot: true,
-              noglobstar: true,
-              nocomment: true,
-            })
-          ) ||
-          bookUrls.some(
-            (url) => url.replace(/\/$/, '') === ref.url.replace(/\/$/, '')
-          )
-      );
-
-      // Add the rest of the book urls with the url as title
-      for (const bookUrl of bookUrls) {
-        if (
-          !itemRefs.some(
-            (ref) => bookUrl.replace(/\/$/, '') === ref.url.replace(/\/$/, '')
-          )
-        ) {
-          itemRefs.push(new ItemRef(shelf, bookUrl, bookUrl));
+      try {
+        let bookUrls: string[] = [];
+        let bookTitles: string[] = [];
+        for (const book of args.books) {
+          if (book.startsWith(shelf.origin)) {
+            bookUrls.push(book);
+          } else {
+            bookTitles.push(book);
+          }
         }
-      }
 
-      if (itemRefs.length === 0) {
-        console.error(`No items matching your rules could be found.`);
-      } else {
-        for (const itemRef of itemRefs) {
-          console.log(`Resolving "${itemRef.title}"...`);
-          const item = await itemRef.resolve();
-          if (!item) {
-            console.error(`Failed to resolve item type of "${itemRef.title}".`);
-            continue;
-          }
+        let itemRefs = bookTitles.length > 0 ? await shelf.getItems() : [];
 
-          console.log(`Downloading "${itemRef.title}"...`);
-          try {
-            await item.download(args.outDir, {
-              ...args,
-              format: args.format as PaperFormat,
-            });
-          } catch (e) {
-            console.error(e);
-            console.error(`Failed to download "${itemRef.title}!"`);
-            continue;
+        // Drop books not specified
+        itemRefs = itemRefs.filter(
+          (ref) =>
+            bookTitles.some((title) =>
+              minimatch(ref.title, title, {
+                nocase: true,
+                dot: true,
+                noglobstar: true,
+                nocomment: true,
+              })
+            ) ||
+            bookUrls.some(
+              (url) => url.replace(/\/$/, '') === ref.url.replace(/\/$/, '')
+            )
+        );
+
+        // Add the rest of the book urls with the url as title
+        for (const bookUrl of bookUrls) {
+          if (
+            !itemRefs.some(
+              (ref) => bookUrl.replace(/\/$/, '') === ref.url.replace(/\/$/, '')
+            )
+          ) {
+            itemRefs.push(new ItemRef(shelf, bookUrl, bookUrl));
           }
-          console.log(`Successfully downloaded "${itemRef.title}"!`);
+        }
+
+        if (itemRefs.length === 0) {
+          console.error(`No items matching your rules could be found.`);
+        } else {
+          for (const itemRef of itemRefs) {
+            console.log(`Resolving "${itemRef.title}"...`);
+            const item = await itemRef.resolve();
+            if (!item) {
+              console.error(
+                `Failed to resolve item type of "${itemRef.title}".`
+              );
+              continue;
+            }
+
+            console.log(`Downloading "${itemRef.title}"...`);
+            try {
+              await item.download(args.outDir, {
+                ...args,
+                format: args.format as PaperFormat,
+              });
+            } catch (e) {
+              console.error(e);
+              console.error(`Failed to download "${itemRef.title}!"`);
+              continue;
+            }
+            console.log(`Successfully downloaded "${itemRef.title}"!`);
+          }
+        }
+      } finally {
+        if (process.env.NODE_ENV !== 'development') {
+          await shelf.destroy();
         }
       }
     } catch (e) {
-      console.log(`Error: ${e}`);
-    } finally {
-      if (process.env.NODE_ENV !== 'development') {
-        await shelf.destroy();
-      }
+      console.log(`Error: ${e instanceof Error ? e.message : e}`);
     }
   },
 });

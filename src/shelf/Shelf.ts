@@ -24,7 +24,12 @@ export abstract class Shelf {
     this.browser = await puppeteer.launch({
       headless: true,
     });
-    await this.login();
+    try {
+      await this.login();
+    } catch (e) {
+      await this.destroy();
+      throw e;
+    }
     return this;
   }
 
