@@ -45,7 +45,9 @@ export abstract class Shelf {
     const page = await this.browser.newPage();
     try {
       await page.goto(new URL(url, this.origin).toString());
-      await page.waitForSelector(loginBtnSelector);
+      await page.waitForSelector(loginBtnSelector, {
+        timeout: this.options.timeout,
+      });
 
       await page.type(userSelector, this.options.user);
       await page.type(passwordSelector, this.options.password);

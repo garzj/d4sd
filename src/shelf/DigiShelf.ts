@@ -23,10 +23,12 @@ export class DigiShelf extends Shelf {
             .waitForNavigation({ timeout: this.options.timeout })
             .then(() => true),
           page
-            .waitForFunction(() =>
-              document
-                .querySelector('div[role="dialog"]')
-                ?.innerHTML.includes('Problem')
+            .waitForFunction(
+              () =>
+                document
+                  .querySelector('div[role="dialog"]')
+                  ?.innerHTML.includes('Problem'),
+              { timeout: this.options.timeout }
             )
             .then(() => false),
         ])
@@ -37,7 +39,9 @@ export class DigiShelf extends Shelf {
     const page = await this.browser.newPage();
     try {
       await page.goto(new URL('/ebooks', this.origin).toString());
-      await page.waitForSelector('#shelf > a');
+      await page.waitForSelector('#shelf > a', {
+        timeout: this.options.timeout,
+      });
 
       const itemLinks = await page.$$('#shelf > a');
 

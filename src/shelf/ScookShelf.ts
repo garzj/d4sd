@@ -18,9 +18,15 @@ export class ScookShelf extends Shelf {
       'form#account button[type="submit"]',
       (page) =>
         Promise.race([
-          page.waitForSelector('.validation-summary-errors').then(() => false),
           page
-            .waitForSelector('#page-advanced-user-dashboard')
+            .waitForSelector('.validation-summary-errors', {
+              timeout: this.options.timeout,
+            })
+            .then(() => false),
+          page
+            .waitForSelector('#page-advanced-user-dashboard', {
+              timeout: this.options.timeout,
+            })
             .then(() => true),
         ])
     );
