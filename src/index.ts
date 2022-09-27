@@ -1,6 +1,8 @@
 import './config/env';
 
-import { Shelf } from './Shelf';
+import { Shelf } from './shelf/Shelf';
+import { DigiShelf } from './shelf/DigiShelf';
+import { ScookShelf } from './shelf/ScookShelf';
 import { Archive } from './item/Archive';
 import { DigiBook } from './item/DigiBook';
 import { DigiDoc } from './item/DigiDoc';
@@ -13,6 +15,8 @@ import { DownloadOptions } from './item/download-options';
 
 export {
   Shelf,
+  DigiShelf,
+  ScookShelf,
   Archive,
   DigiBook,
   DigiDoc,

@@ -1,4 +1,4 @@
-import { Shelf } from '@/Shelf';
+import { Shelf } from '@/shelf/Shelf';
 import { join } from 'path';
 import sanitize = require('sanitize-filename');
 import { promises } from 'fs';

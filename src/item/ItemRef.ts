@@ -1,4 +1,4 @@
-import { Shelf } from '@/Shelf';
+import { Shelf } from '@/shelf/Shelf';
 import { Archive } from './Archive';
 import { DigiBook } from './DigiBook';
 import { Item } from './Item';

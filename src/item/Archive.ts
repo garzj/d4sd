@@ -1,4 +1,3 @@
-import { Shelf } from '../Shelf';
 import { DigiDoc } from './DigiDoc';
 import { Folder } from './Folder';
 import { ItemGroup } from './ItemGroup';
@@ -50,7 +49,7 @@ export class Archive extends ItemGroup {
           const href = await itemLink.evaluate(
             (a) => (a as HTMLLinkElement).href
           );
-          const url = new URL(href, Shelf.origin).toString();
+          const url = new URL(href, this.shelf.origin).toString();
 
           let title = await itemLink.evaluate(
             (a) => a.querySelector('h1')?.innerText

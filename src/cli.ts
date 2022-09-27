@@ -4,6 +4,7 @@ import './config/env';
 
 import {
   command,
+  flag,
   number,
   option,
   optional,
@@ -11,7 +12,7 @@ import {
   run,
   string,
 } from 'cmd-ts';
-import { Shelf } from './Shelf';
+import { Shelf } from './shelf/Shelf';
 import * as minimatch from 'minimatch';
 import { prompt } from 'inquirer';
 import { readFileSync } from 'fs';
@@ -20,6 +21,8 @@ import { PaperFormat } from 'puppeteer';
 import { paperFormats } from 'puppeteer/lib/cjs/puppeteer/common/PDFOptions';
 import { hasOwnProperty } from './util/object';
 import { ItemRef } from './item/ItemRef';
+import { ScookShelf } from './shelf/ScookShelf';
+import { DigiShelf } from './shelf/DigiShelf';
 
 const { version } = JSON.parse(
   readFileSync(join(__dirname, '../package.json')).toString()
@@ -29,7 +32,7 @@ const cmd = command({
   name: 'd4sd',
   description:
     'Digi4school Downloader\n' +
-    'Downloads books from https://digi4school.at/\n' +
+    'Downloads books from https://digi4school.at/ and https://www.scook.at/\n' +
     'GitHub: https://github.com/garzj/d4sd',
   version,
   args: {
@@ -39,17 +42,23 @@ const cmd = command({
       description:
         'The titles or urls of books or archives you want to download. Supports glob patterns.',
     }),
-    email: option({
-      long: 'email',
+    user: option({
+      long: 'user',
       short: 'u',
       type: string,
-      description: 'Your login email.',
+      description: 'Your login email/username.',
     }),
     password: option({
       long: 'password',
       short: 'p',
       type: optional(string),
       description: 'Your login password.',
+    }),
+    scook: flag({
+      long: 'scook',
+      short: 's',
+      defaultValue: () => false,
+      description: 'Login on scook instead.',
     }),
     concurrency: option({
       long: 'concurrency',
@@ -105,8 +114,8 @@ const cmd = command({
       console.log('');
     }
 
-    const shelf = await Shelf.load({
-      email: args.email,
+    const shelf: Shelf = await (args.scook ? ScookShelf : DigiShelf).load({
+      user: args.user,
       password,
       timeout: args.timeout,
     });
@@ -114,7 +123,7 @@ const cmd = command({
     let bookUrls: string[] = [];
     let bookTitles: string[] = [];
     for (const book of args.books) {
-      if (book.startsWith(Shelf.origin)) {
+      if (book.startsWith(shelf.origin)) {
         bookUrls.push(book);
       } else {
         bookTitles.push(book);
