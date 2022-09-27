@@ -49,6 +49,7 @@ export class ScookBook extends Book {
           await delay(1000);
           continue;
         }
+        if (isNaN(pageCount)) continue;
         break;
       }
 
