@@ -35,6 +35,11 @@ More options can be found with `d4sd -h`.
 
 **Note:** On Linux, make sure to use single quotes `'` instead of `"`.
 
+### Slow internet connections
+
+On slow networks I'd recommend setting the timeout to a higher value  
+`d4sd -u <user> -t 180000 "*"`
+
 ## Disclaimer
 
 This project is only for educational purposes. Don't download books with this tool please.
