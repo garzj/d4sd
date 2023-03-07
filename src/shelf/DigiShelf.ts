@@ -47,9 +47,7 @@ export class DigiShelf extends Shelf {
 
       return await Promise.all(
         itemLinks.map(async (itemLink) => {
-          const href = await itemLink.evaluate(
-            (a) => (a as HTMLLinkElement).href
-          );
+          const href = await itemLink.evaluate((a) => a.href);
           const url = new URL(href, this.origin).toString();
 
           const title = await itemLink.evaluate(

@@ -19,18 +19,16 @@ export class Archive extends ItemGroup {
       });
 
       // Find archive directories: id -> name
-      const dirEntries: [number, string][] = await page.$$eval(
-        '#content > a.directory',
-        (a) =>
-          (a as HTMLLinkElement[]).map((a) => {
-            const dirTitle = a.querySelector('h1')?.innerText;
-            if (!dirTitle) {
-              throw new ScrapeError(
-                `Could not find the title of a folder in archive with url ${window.location.href}.`
-              );
-            }
-            return [parseInt(a.id), dirTitle];
-          })
+      const dirEntries = await page.$$eval('#content > a.directory', (a) =>
+        a.map((a) => {
+          const dirTitle = a.querySelector('h1')?.innerText;
+          if (!dirTitle) {
+            throw new ScrapeError(
+              `Could not find the title of a folder in archive with url ${window.location.href}.`
+            );
+          }
+          return [parseInt(a.id), dirTitle] as [number, string];
+        })
       );
       const dirs: Record<number, Directory> = {};
       for (const dirEntry of dirEntries) {
@@ -49,9 +47,7 @@ export class Archive extends ItemGroup {
       await Promise.all(
         itemLinks.map(async (itemLink) => {
           // Get item url and title
-          const href = await itemLink.evaluate(
-            (a) => (a as HTMLLinkElement).href
-          );
+          const href = await itemLink.evaluate((a) => a.href);
           const url = new URL(href, this.shelf.origin).toString();
 
           let title = await itemLink.evaluate(

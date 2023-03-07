@@ -13,12 +13,13 @@ import {
   string,
 } from 'cmd-ts';
 import { Shelf } from './shelf/Shelf';
-import * as minimatch from 'minimatch';
-import { prompt } from 'inquirer';
+import * as inquirer from 'inquirer';
+import minimatch from 'minimatch';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { PaperFormat } from 'puppeteer';
-import { paperFormats } from 'puppeteer/lib/cjs/puppeteer/common/PDFOptions';
+// @ts-ignore
+import { _paperFormats as paperFormats } from 'puppeteer-core';
 import { hasOwnProperty } from './util/object';
 import { ItemRef } from './item/ItemRef';
 import { ScookShelf } from './shelf/ScookShelf';
@@ -106,7 +107,7 @@ const cmd = command({
       password = args.password;
     } else {
       password = (
-        await prompt({
+        await inquirer.prompt({
           name: 'password',
           type: 'password',
         })
