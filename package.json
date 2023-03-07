@@ -12,7 +12,7 @@
     "prepack": "npm run build",
     "upgrade": "npx ncu -ux @types/node-fetch node-fetch @types/inquirer inquirer"
   },
-  "author": "Johannes Garz <jojogarz123@gmail.com> (https://www.garz.tech/)",
+  "author": "Johannes Garz <johannes@garz.dev> (https://garz.dev/)",
   "license": "GPL-3.0 License",
   "bin": {
     "d4sd": "lib/cli.js"
