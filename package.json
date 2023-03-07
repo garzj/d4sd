@@ -8,7 +8,7 @@
     "build": "npx ttsc -p .",
     "start": "node ./lib/cli.js",
     "deploy": "npm run build && npm start",
-    "dev": "export NODE_ENV=development || set NODE_ENV=development&& npx ts-node-dev -C ttypescript --respawn ./src/index.ts",
+    "dev": "export NODE_ENV=development || set NODE_ENV=development&& npx ts-node-dev -C ttypescript --respawn ./src/cli.ts",
     "prepack": "npm run build",
     "upgrade": "npx ncu -ux @types/node-fetch node-fetch @types/inquirer inquirer"
   },
