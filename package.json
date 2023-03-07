@@ -6,7 +6,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "ttsc -p .",
-    "start": "node ./lib/index.js",
+    "start": "node ./lib/cli.js",
     "deploy": "npm run build && npm start",
     "dev": "export NODE_ENV=development || set NODE_ENV=development&& npx ts-node-dev -C ttypescript --respawn ./src/index.ts",
     "prepack": "npm run build"
