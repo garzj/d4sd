@@ -3,23 +3,29 @@ import { waitForGoto } from '../util/puppeteer';
 import { URL } from 'url';
 import { Book } from './Book';
 import { defDownloadOptions, DownloadOptions } from './download-options';
+import { SizeAttributes, getPdfOptions } from './get-pdf-options';
 
 export class DigiBook extends Book {
   async download(outDir: string, _options?: DownloadOptions) {
     const dir = await this.mkSubDir(outDir);
     const options = defDownloadOptions(_options);
+    options.format ??= 'a4';
 
     // Get url of 1st svg page
     const checkPage = await this.shelf.browser.newPage();
     let page1Url: string;
+    let sizeHint: SizeAttributes;
     try {
       await checkPage.goto(new URL(`?page=1`, this.url).toString(), {
         waitUntil: 'networkidle2',
         timeout: this.shelf.options.timeout,
       });
-      page1Url = await checkPage.$eval(
+      [page1Url, sizeHint] = await checkPage.$eval(
         '#pg1 > object',
-        (obj) => (obj as HTMLObjectElement).data
+        (obj: HTMLObjectElement): [string, SizeAttributes] => [
+          obj.data,
+          { width: obj.width, height: obj.height },
+        ]
       );
     } finally {
       await checkPage.close();
@@ -54,7 +60,7 @@ export class DigiBook extends Book {
         const pdfFile = this.getPdfPath(dir, pageNo);
 
         await page.pdf({
-          format: options.format,
+          ...(await getPdfOptions(page, options, sizeHint)),
           path: pdfFile,
         });
 

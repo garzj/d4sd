@@ -2,6 +2,7 @@ import { ScrapeError } from '../error/ScrapeError';
 import { delay, promisePool } from '../util/promise';
 import { Book } from './Book';
 import { defDownloadOptions, DownloadOptions } from './download-options';
+import { getPdfOptions } from './get-pdf-options';
 
 export class ScookBook extends Book {
   async download(outDir: string, _options?: DownloadOptions) {
@@ -84,15 +85,7 @@ export class ScookBook extends Book {
           const pdfFile = this.getPdfPath(dir, pageNo);
 
           await page.pdf({
-            height: await page.evaluate(
-              () =>
-                window.document.querySelector('img')?.height ||
-                window.innerHeight
-            ),
-            width: await page.evaluate(
-              () =>
-                window.document.querySelector('img')?.width || window.innerWidth
-            ),
+            ...(await getPdfOptions(page, options)),
             path: pdfFile,
           });
         } finally {

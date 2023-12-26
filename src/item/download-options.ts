@@ -7,10 +7,9 @@ export interface DownloadOptions {
   format?: PaperFormat;
 }
 
-const defaultOptions: Required<DownloadOptions> = {
+const defaultOptions: DownloadOptions = {
   concurrency: 10,
   mergePdfs: true,
-  format: 'a4',
 };
 
 export function defDownloadOptions(_options?: DownloadOptions) {
