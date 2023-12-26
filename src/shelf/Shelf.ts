@@ -22,7 +22,7 @@ export abstract class Shelf {
       timeout: options.timeout ?? 60000,
     };
     this.browser = await puppeteer.launch({
-      headless: true,
+      headless: 'new',
     });
     try {
       await this.login();
