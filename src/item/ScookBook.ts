@@ -1,5 +1,5 @@
-import { ScrapeError } from '@/error/ScrapeError';
-import { delay, promisePool } from '@/util/promise';
+import { ScrapeError } from '../error/ScrapeError';
+import { delay, promisePool } from '../util/promise';
 import { Book } from './Book';
 import { defDownloadOptions, DownloadOptions } from './download-options';
 

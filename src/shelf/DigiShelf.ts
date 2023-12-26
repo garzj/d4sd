@@ -1,4 +1,4 @@
-import { ScrapeError } from '@/error/ScrapeError';
+import { ScrapeError } from '../error/ScrapeError';
 import { ItemRef } from '..';
 import { InitOptions, Shelf } from './Shelf';
 

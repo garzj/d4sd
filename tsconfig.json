@@ -12,9 +12,7 @@
     "noImplicitAny": true,
     "strict": true,
     "baseUrl": ".",
-    "plugins": [{ "transform": "ts-transform-paths" }],
     "paths": {
-      "@/*": ["src/*"],
       "*": ["typings/*", "*"]
     }
   },

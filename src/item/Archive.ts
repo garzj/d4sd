@@ -1,4 +1,4 @@
-import { ScrapeError } from '@/error/ScrapeError';
+import { ScrapeError } from '../error/ScrapeError';
 import { DigiDoc } from './DigiDoc';
 import { Folder } from './Folder';
 import { ItemGroup } from './ItemGroup';

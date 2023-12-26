@@ -1,5 +1,5 @@
-import { promisePool } from '@/util/promise';
-import { waitForGoto } from '@/util/puppeteer';
+import { promisePool } from '../util/promise';
+import { waitForGoto } from '../util/puppeteer';
 import { URL } from 'url';
 import { Book } from './Book';
 import { defDownloadOptions, DownloadOptions } from './download-options';

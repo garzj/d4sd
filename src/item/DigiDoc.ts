@@ -1,4 +1,4 @@
-import { serializeCookies } from '@/util/cookie';
+import { serializeCookies } from '../util/cookie';
 import { createWriteStream } from 'fs';
 import fetch from 'node-fetch';
 import { join } from 'path';

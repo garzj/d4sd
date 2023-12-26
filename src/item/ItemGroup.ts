@@ -1,4 +1,4 @@
-import { promisePool } from '@/util/promise';
+import { promisePool } from '../util/promise';
 import { ItemRef } from './ItemRef';
 import { DigiDoc } from './DigiDoc';
 import { Folder } from './Folder';

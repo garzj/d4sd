@@ -1,4 +1,4 @@
-import { LoginError } from '@/error/LoginError';
+import { LoginError } from '../error/LoginError';
 import * as puppeteer from 'puppeteer';
 import { ItemRef } from '../item/ItemRef';
 
