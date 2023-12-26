@@ -9,7 +9,9 @@
 ## Installation
 
 - Install [Node.js + npm](https://nodejs.org/)
-- `npm i -g d4sd`
+- `npm i -g d4sd@latest`
+  - (or use `yarn global add d4sd@latest`)
+  - (or replace `d4sd` with `npx d4sd@latest` for all commands)
 
 ## Usage
 
