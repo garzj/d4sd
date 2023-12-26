@@ -14,7 +14,7 @@ import {
 } from 'cmd-ts';
 import { Shelf } from './shelf/Shelf';
 import * as inquirer from 'inquirer';
-import minimatch from 'minimatch';
+import { minimatch } from 'minimatch';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { PaperFormat } from 'puppeteer';
