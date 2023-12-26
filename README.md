@@ -3,6 +3,12 @@
 ## Features
 
 - Download books and archives with folders and additional documents from https://digi4school.at/
+
+  Supports linked books from:
+
+  - Scook
+  - Westermann BiBox
+
 - Download books from https://www.scook.at/ (only by url)
 - Typescript API
 

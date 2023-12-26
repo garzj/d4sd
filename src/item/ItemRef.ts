@@ -1,5 +1,6 @@
 import { Shelf } from '../shelf/Shelf';
 import { Archive } from './Archive';
+import { BiBoxBook } from './BiBoxBook';
 import { DigiBook } from './DigiBook';
 import { Item } from './Item';
 import { ScookBook } from './ScookBook';
@@ -19,6 +20,10 @@ export class ItemRef {
 
       if (pageUrl.includes('scook.at')) {
         return new ScookBook(this.shelf, pageUrl, this.title);
+      }
+
+      if (pageUrl.includes('bibox2.westermann.de')) {
+        return new BiBoxBook(this.shelf, pageUrl, this.title);
       }
 
       if ((await page.$('#loadPage')) != null) {
