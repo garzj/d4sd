@@ -9,7 +9,6 @@ export class DigiBook extends Book {
   async download(outDir: string, _options?: DownloadOptions) {
     const dir = await this.mkSubDir(outDir);
     const options = defDownloadOptions(_options);
-    options.format ??= 'a4';
 
     // Get url of 1st svg page
     const checkPage = await this.shelf.browser.newPage();
