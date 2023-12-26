@@ -13,7 +13,7 @@
     "upgrade": "npx ncu -u -x @types/node-fetch -x node-fetch -x @types/inquirer -x inquirer"
   },
   "author": "Johannes Garz <johannes@garz.dev> (https://garz.dev/)",
-  "license": "GPL-3.0 License",
+  "license": "GPL-3.0",
   "bin": {
     "d4sd": "lib/cli.js"
   },
