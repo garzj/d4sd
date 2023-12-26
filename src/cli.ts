@@ -19,7 +19,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { PaperFormat } from 'puppeteer';
 // @ts-ignore
-import { _paperFormats as paperFormats } from 'puppeteer-core';
+import { paperFormats } from 'puppeteer';
 import { hasOwnProperty } from './util/object';
 import { ItemRef } from './item/ItemRef';
 import { ScookShelf } from './shelf/ScookShelf';
@@ -88,11 +88,12 @@ const cmd = command({
     }),
   },
   handler: async (args) => {
+    paperFormats;
     if (args.format && !hasOwnProperty(paperFormats, args.format)) {
       console.error(
-        `Invalid page format specified. Possible options are: ${JSON.stringify(
-          Object.keys(paperFormats)
-        )}`
+        `Invalid page format specified. Possible options are: ${Object.keys(
+          paperFormats
+        ).join(', ')}`
       );
       return;
     }
