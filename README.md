@@ -6,8 +6,9 @@
 
   Supports linked books from:
 
-  - Scook
-  - Westermann BiBox
+  - Scook (https://www.scook.at/)
+  - Westermann BiBox (https://bibox2.westermann.de/)
+  - various others like https://hpthek.at/
 
 - Download books from https://www.scook.at/ (only by url)
 - Typescript API
