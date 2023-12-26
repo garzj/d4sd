@@ -1,6 +1,6 @@
 {
   "name": "d4sd",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "A downloader for https://digi4school.at/.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
