@@ -10,7 +10,7 @@
     "deploy": "npm run build && npm start",
     "dev": "export NODE_ENV=development || set NODE_ENV=development&& npx ts-node-dev -C ttypescript --respawn ./src/cli.ts",
     "prepack": "npm run build",
-    "upgrade": "npx ncu -ux @types/node-fetch node-fetch @types/inquirer inquirer"
+    "upgrade": "npx ncu -u -x @types/node-fetch -x node-fetch -x @types/inquirer -x inquirer"
   },
   "author": "Johannes Garz <johannes@garz.dev> (https://garz.dev/)",
   "license": "GPL-3.0 License",
