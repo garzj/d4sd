@@ -5,12 +5,12 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "npx ttsc -p .",
+    "build": "ttsc -p .",
     "start": "node ./lib/cli.js",
-    "deploy": "npm run build && npm start",
-    "dev": "export NODE_ENV=development || set NODE_ENV=development&& npx ts-node-dev -C ttypescript --respawn ./src/cli.ts",
-    "prepack": "npm run build",
-    "upgrade": "npx ncu -u -x @types/node-fetch -x node-fetch -x @types/inquirer -x inquirer"
+    "deploy": "yarn build && yarn start",
+    "dev": "export NODE_ENV=development || set NODE_ENV=development&& ts-node-dev -C ttypescript --respawn ./src/cli.ts",
+    "prepack": "yarn build",
+    "upgrade": "ncu -u -x @types/node-fetch -x node-fetch -x @types/inquirer -x inquirer"
   },
   "author": "Johannes Garz <johannes@garz.dev> (https://garz.dev/)",
   "license": "GPL-3.0",
