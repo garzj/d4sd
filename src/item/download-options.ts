@@ -1,18 +1,31 @@
-import defaultsDeep from 'defaults-deep-ts';
 import { PaperFormat } from 'puppeteer';
+import { Item } from './Item';
+import { ItemGroup } from './ItemGroup';
+import { Book } from './Book';
+
+export type DownloadProgress<I extends Item = Item> = {
+  percentage: number;
+  item: I;
+} & (I extends Book
+  ? { downloadedPages: number; pageCount: number }
+  : I extends ItemGroup
+  ? { downloadedItems: Item[]; items: Item[] }
+  : {});
 
 export interface DownloadOptions {
   concurrency?: number;
   mergePdfs?: boolean;
   format?: PaperFormat;
+  onStart?: (progress: DownloadProgress) => void;
+  onProgress?: (progress: DownloadProgress) => void;
 }
 
-const defaultOptions: DownloadOptions = {
-  concurrency: 10,
-  mergePdfs: true,
-};
-
 export function defDownloadOptions(_options?: DownloadOptions) {
-  const options = _options ?? {};
-  return defaultsDeep(options, defaultOptions);
+  return (<T extends DownloadOptions>(x: T) => x)({
+    ..._options,
+    concurrency: _options?.concurrency ?? 10,
+    mergePdfs: _options?.mergePdfs ?? true,
+    onStart: _options?.onStart ?? (() => {}),
+    onProgress: _options?.onProgress ?? (() => {}),
+  });
 }

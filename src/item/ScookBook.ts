@@ -64,6 +64,15 @@ export class ScookBook extends Book {
     }
 
     // Page download pool
+    let downloadedPages = 0;
+    const getProgress = () => ({
+      item: this,
+      percentage: downloadedPages / pageCount,
+      downloadedPages,
+      pageCount,
+    });
+    options.onStart(getProgress());
+
     await promisePool(
       async (i) => {
         const pageNo = i + 1;
@@ -88,6 +97,9 @@ export class ScookBook extends Book {
             ...(await getPdfOptions(page, options)),
             path: pdfFile,
           });
+
+          downloadedPages++;
+          options.onProgress(getProgress());
         } finally {
           await page.close();
         }

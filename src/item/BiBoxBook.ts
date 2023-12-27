@@ -47,6 +47,14 @@ export class BiBoxBook extends Book {
 
     // Page download pool
     const pageCount = pageUrls.length;
+    let downloadedPages = 0;
+    const getProgress = () => ({
+      item: this,
+      percentage: downloadedPages / pageCount,
+      downloadedPages,
+      pageCount,
+    });
+    options.onStart(getProgress());
 
     await promisePool(
       async (i) => {
@@ -67,6 +75,8 @@ export class BiBoxBook extends Book {
             ...(await getPdfOptions(page, options)),
             path: pdfFile,
           });
+
+          options.onProgress(getProgress());
         } finally {
           await page.close();
         }

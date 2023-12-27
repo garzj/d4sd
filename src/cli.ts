@@ -24,6 +24,11 @@ import { hasOwnProperty } from './util/object';
 import { ItemRef } from './item/ItemRef';
 import { ScookShelf } from './shelf/ScookShelf';
 import { DigiShelf } from './shelf/DigiShelf';
+import * as cliProgress from 'cli-progress';
+import { DownloadOptions, DownloadProgress } from './item/download-options';
+import { Book } from './item/Book';
+import { ItemGroup } from './item/ItemGroup';
+import { Item } from './item/Item';
 
 const { version } = JSON.parse(
   readFileSync(join(__dirname, '../package.json')).toString()
@@ -177,16 +182,73 @@ const cmd = command({
             }
 
             console.log(`Downloading "${itemRef.title}"...`);
+
+            const multiBar = new cliProgress.MultiBar(
+              {
+                format:
+                  ' {bar} | {value}/{total} | {percentage}% | ETA: {eta}s | {title}',
+              },
+              cliProgress.Presets.shades_classic
+            );
+            const bars = new Map<Item, cliProgress.Bar>();
+            const barsUpdater = setInterval(
+              () => bars.forEach((bar) => bar.updateETA()),
+              1000
+            );
+
+            const options: DownloadOptions = {
+              ...args,
+              format: args.format as PaperFormat | undefined,
+              onStart(progress) {
+                let bar: cliProgress.SingleBar | null = null;
+                if (progress.item instanceof Book) {
+                  bar = multiBar.create(
+                    (progress as DownloadProgress<Book>).pageCount,
+                    0,
+                    {
+                      title: `${progress.item.constructor.name}: ${progress.item.title}`,
+                    }
+                  );
+                } else if (progress.item instanceof ItemGroup) {
+                  bar = multiBar.create(
+                    (progress as DownloadProgress<ItemGroup>).items.length,
+                    0,
+                    { title: `Group: ${progress.item.title}` }
+                  );
+                }
+                bar && bars.set(progress.item, bar);
+              },
+              onProgress(progress) {
+                const bar = bars.get(progress.item)!;
+                if (progress.item instanceof Book) {
+                  bar.update(
+                    (progress as DownloadProgress<Book>).downloadedPages
+                  );
+                } else if (progress.item instanceof ItemGroup) {
+                  bar.update(
+                    (progress as DownloadProgress<ItemGroup>).downloadedItems
+                      .length
+                  );
+                }
+              },
+            };
+
+            let err: unknown = null;
             try {
-              await item.download(args.outDir, {
-                ...args,
-                format: args.format as PaperFormat,
-              });
+              await item.download(args.outDir, options);
             } catch (e) {
-              console.error(e);
+              err = e;
+            }
+
+            clearInterval(barsUpdater);
+            multiBar.stop();
+
+            if (err) {
+              console.error(err);
               console.error(`Failed to download "${itemRef.title}!"`);
               continue;
             }
+
             console.log(`Successfully downloaded "${itemRef.title}"!`);
           }
         }

@@ -4,6 +4,7 @@ import { URL } from 'url';
 import { Book } from './Book';
 import { defDownloadOptions, DownloadOptions } from './download-options';
 import { SizeAttributes, getPdfOptions } from './get-pdf-options';
+import { ScrapeError } from '../error/ScrapeError';
 
 export class DigiBook extends Book {
   async download(outDir: string, _options?: DownloadOptions) {
@@ -14,6 +15,7 @@ export class DigiBook extends Book {
     const checkPage = await this.shelf.browser.newPage();
     let page1Url: string;
     let sizeHint: SizeAttributes;
+    let pageCount: number;
     try {
       await checkPage.goto(new URL(`?page=1`, this.url).toString(), {
         waitUntil: 'networkidle2',
@@ -26,12 +28,23 @@ export class DigiBook extends Book {
           { width: obj.width, height: obj.height },
         ]
       );
+      pageCount = await checkPage.$$eval(
+        '#thumbnailPanel a.thumbnail',
+        (elms) => elms.length
+      );
     } finally {
       await checkPage.close();
     }
 
     // Page download pool
-    let pageCount = 0;
+    let downloadedPages = 0;
+    const getProgress = () => ({
+      item: this,
+      percentage: downloadedPages / pageCount,
+      downloadedPages,
+      pageCount,
+    });
+    options.onStart(getProgress());
 
     await promisePool(async (i, stop) => {
       const pageNo = i + 1;
@@ -63,13 +76,20 @@ export class DigiBook extends Book {
           path: pdfFile,
         });
 
-        pageCount++;
+        downloadedPages++;
+        options.onProgress(getProgress());
       } finally {
         await page.close();
       }
     }, options.concurrency);
 
+    if (downloadedPages != pageCount) {
+      throw new ScrapeError(
+        `A page count of ${pageCount} was parsed, but ${downloadedPages} were downloaded. Please report this issue.`
+      );
+    }
+
     // Merge pdf pages
-    options.mergePdfs && (await this.mergePdfPages(dir, pageCount));
+    options.mergePdfs && (await this.mergePdfPages(dir, downloadedPages));
   }
 }

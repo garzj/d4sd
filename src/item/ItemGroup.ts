@@ -33,16 +33,33 @@ export abstract class ItemGroup extends Item {
       }
     }
 
+    const downloadedItems: Item[] = [];
+    const getProgress = () => ({
+      item: this,
+      percentage: downloadedItems.length / items.length,
+      downloadedItems,
+      items,
+    });
+    options.onStart(getProgress());
+
     // Document download pool
     await promisePool(
-      (i) => docs[i].download(dir),
+      async (i) => {
+        await docs[i].download(dir);
+
+        downloadedItems.push(docs[i]);
+        options.onProgress(getProgress());
+      },
       options.concurrency,
       docs.length
     );
 
     // Download other stuff (books / folders) individually
     for (let other of others) {
-      await other.download(dir);
+      await other.download(dir, options);
+
+      downloadedItems.push(other);
+      options.onProgress(getProgress());
     }
   }
 

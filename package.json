@@ -18,6 +18,7 @@
     "d4sd": "lib/cli.js"
   },
   "devDependencies": {
+    "@types/cli-progress": "^3.11.5",
     "@types/cookie": "^0.6.0",
     "@types/inquirer": "^8.2.2",
     "@types/minimatch": "^5.1.2",
@@ -28,9 +29,9 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "cli-progress": "^3.12.0",
     "cmd-ts": "^0.13.0",
     "cookie": "^0.6.0",
-    "defaults-deep-ts": "^0.2.3",
     "dotenv": "^16.3.1",
     "inquirer": "^8.2.2",
     "minimatch": "^9.0.3",
