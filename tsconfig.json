@@ -11,10 +11,7 @@
     "resolveJsonModule": true,
     "noImplicitAny": true,
     "strict": true,
-    "baseUrl": ".",
-    "paths": {
-      "*": ["typings/*", "*"]
-    }
+    "baseUrl": "."
   },
   "exclude": ["./node_modules", "./lib"],
   "include": ["./src"]
