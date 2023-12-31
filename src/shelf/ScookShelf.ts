@@ -2,7 +2,9 @@ import { ItemRef } from '..';
 import { InitOptions, Shelf } from './Shelf';
 
 export class ScookShelf extends Shelf {
-  constructor() {
+  static id = 'scook';
+
+  private constructor() {
     super('https://www.scook.at/');
   }
 

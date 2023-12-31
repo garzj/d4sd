@@ -37,8 +37,11 @@ Download your whole shelf
 Download a book using an url  
 `d4sd -u john.doe@example.com "https://digi4school.at/ebook/xxxxxxxxxxxx"` (`"another url"`...)
 
-Download a scook book  
-`d4sd -s -u john.doe@example.com "https://www.scook.at/produkt/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`
+Download a book from Scook  
+`d4sd -s scook -u john.doe@example.com "https://www.scook.at/produkt/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`
+
+Download a book from Trauner DigiBox  
+`d4sd -s trauner -u john.doe@example.com "Englisch *"`
 
 More options can be found with `d4sd -h`.
 

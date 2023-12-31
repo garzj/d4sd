@@ -2,23 +2,23 @@ import { ScrapeError } from '../error/ScrapeError';
 import { ItemRef } from '..';
 import { InitOptions, Shelf } from './Shelf';
 
-export class DigiShelf extends Shelf {
-  static id = 'digi';
+export class TraunerShelf extends Shelf {
+  static id = 'trauner';
 
-  private constructor() {
-    super('https://digi4school.at/');
+  constructor() {
+    super('https://www.trauner-digibox.com/');
   }
 
   static async load(options: InitOptions) {
-    return await new DigiShelf().init(options);
+    return await new TraunerShelf().init(options);
   }
 
   protected async login() {
     await this.formLogin(
       '/',
-      '#email',
-      '#password',
-      '#login > button',
+      '#login-input',
+      '#password-input',
+      '#login > input[type="submit"]',
       (page) =>
         Promise.race([
           page
@@ -41,11 +41,13 @@ export class DigiShelf extends Shelf {
     const page = await this.browser.newPage();
     try {
       await page.goto(new URL('/ebooks', this.origin).toString());
-      await page.waitForSelector('#shelf > a', {
+
+      const linkSelector = '#shelf a.ebook-link-box';
+      await page.waitForSelector(linkSelector, {
         timeout: this.options.timeout,
       });
 
-      const itemLinks = await page.$$('#shelf > a');
+      const itemLinks = await page.$$(linkSelector);
 
       return await Promise.all(
         itemLinks.map(async (itemLink) => {

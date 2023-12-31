@@ -4,7 +4,6 @@ import './config/env';
 
 import {
   command,
-  flag,
   number,
   option,
   optional,
@@ -29,6 +28,7 @@ import { DownloadOptions, DownloadProgress } from './item/download-options';
 import { Book } from './item/Book';
 import { ItemGroup } from './item/ItemGroup';
 import { Item } from './item/Item';
+import { TraunerShelf } from './shelf/TraunerShelf';
 
 const { version } = JSON.parse(
   readFileSync(join(__dirname, '../package.json')).toString()
@@ -60,11 +60,12 @@ const cmd = command({
       type: optional(string),
       description: 'Your login password.',
     }),
-    scook: flag({
-      long: 'scook',
+    shelf: option({
+      long: 'shelf',
       short: 's',
-      defaultValue: () => false,
-      description: 'Login on scook instead.',
+      defaultValue: () => 'digi',
+      description: 'Log onto another shelf instead.',
+      type: string,
     }),
     concurrency: option({
       long: 'concurrency',
@@ -121,8 +122,19 @@ const cmd = command({
       console.log('');
     }
 
+    const shelfs = [DigiShelf, ScookShelf, TraunerShelf];
+    const shelfClass = shelfs.find((shelf) => shelf.id === args.shelf);
+    if (shelfClass === undefined) {
+      console.error(
+        `Invalid shelf id specified. Possible options are: ${shelfs
+          .map((shelf) => shelf.id)
+          .join(', ')}`
+      );
+      return;
+    }
+
     try {
-      const shelf: Shelf = await (args.scook ? ScookShelf : DigiShelf).load({
+      const shelf: Shelf = await shelfClass.load({
         user: args.user,
         password,
         timeout: args.timeout,
