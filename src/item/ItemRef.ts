@@ -3,6 +3,7 @@ import { Archive } from './Archive';
 import { BiBoxBook } from './BiBoxBook';
 import { DigiBook } from './DigiBook';
 import { Item } from './Item';
+import { OebvBook } from './OebvBook';
 import { ScookBook } from './ScookBook';
 
 export class ItemRef {
@@ -26,6 +27,10 @@ export class ItemRef {
         return new BiBoxBook(this.shelf, pageUrl, this.title);
       }
 
+      if (pageUrl.includes('portal.oebv.at')) {
+        return new OebvBook(this.shelf, pageUrl, this.title);
+      }
+    
       if ((await page.$('#loadPage')) != null) {
         return new DigiBook(this.shelf, pageUrl, this.title);
       }
