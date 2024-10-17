@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { Item } from './Item';
-import * as muhammara from 'muhammara';
+import muhammara from 'muhammara';
 import { promises } from 'fs';
 const { rm } = promises;
 
