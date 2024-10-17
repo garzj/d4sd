@@ -63,9 +63,11 @@
     "puppeteer": "^23.6.0",
     "sanitize-filename": "^1.6.3"
   },
-  "directories": {
-    "lib": "lib"
-  },
+  "files": [
+    "/{esm,cjs}/**/*.{js,d.ts,json}",
+    "/LICENSE",
+    "/README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/garzj/d4sd.git"
