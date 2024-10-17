@@ -27,6 +27,7 @@ import { Book } from './item/Book';
 import { ItemGroup } from './item/ItemGroup';
 import { Item } from './item/Item';
 import { TraunerShelf } from './shelf/TraunerShelf';
+import retry from 'async-retry';
 
 const cmd = command({
   name: 'd4sd',
@@ -68,6 +69,13 @@ const cmd = command({
       defaultValue: () => 10,
       description: 'Specifies the maximum amount of pages downloaded at once.',
     }),
+    maxRetries: option({
+      long: 'max-retries',
+      short: 'r',
+      type: number,
+      defaultValue: () => 10,
+      description: 'Change the maximum retries value.',
+    }),
     outDir: option({
       long: 'out-dir',
       short: 'o',
@@ -85,6 +93,7 @@ const cmd = command({
       short: 't',
       type: optional(number),
       description: 'Terminates the download, when exceeded.',
+      defaultValue: () => 300000,
     }),
   },
   handler: async (args) => {
@@ -178,10 +187,12 @@ const cmd = command({
         } else {
           for (const itemRef of itemRefs) {
             console.log(`Resolving "${itemRef.title}"...`);
-            const item = await itemRef.resolve();
+            const item = await retry(() => itemRef.resolve(), {
+              retries: args.maxRetries,
+            });
             if (!item) {
               console.error(
-                `Failed to resolve item type of "${itemRef.title}".`
+                `Failed to resolve item type of "${itemRef.title}". Retried ${args.maxRetries} times.`
               );
               continue;
             }
@@ -240,7 +251,9 @@ const cmd = command({
 
             let err: unknown = null;
             try {
-              await item.download(args.outDir, options);
+              await retry(() => item.download(args.outDir, options), {
+                retries: args.maxRetries,
+              });
             } catch (e) {
               err = e;
             }
@@ -250,7 +263,9 @@ const cmd = command({
 
             if (err) {
               console.error(err);
-              console.error(`Failed to download "${itemRef.title}!"`);
+              console.error(
+                `Failed to download "${itemRef.title}! Retried ${args.maxRetries} times."`
+              );
               continue;
             }
 

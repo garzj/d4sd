@@ -32,6 +32,7 @@
   "author": "Johannes Garz <johannes@garz.dev> (https://garz.dev/)",
   "license": "GPL-3.0",
   "devDependencies": {
+    "@types/async-retry": "^1.4.9",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie": "^0.6.0",
     "@types/inquirer": "^9.0.7",
@@ -53,6 +54,7 @@
     "typescript": "5.5.4"
   },
   "dependencies": {
+    "async-retry": "^1.3.3",
     "cli-progress": "^3.12.0",
     "cmd-ts": "^0.13.0",
     "cookie": "^1.0.1",
