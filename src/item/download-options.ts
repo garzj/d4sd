@@ -9,8 +9,8 @@ export type DownloadProgress<I extends Item = Item> = {
 } & (I extends Book
   ? { downloadedPages: number; pageCount: number }
   : I extends ItemGroup
-  ? { downloadedItems: Item[]; items: Item[] }
-  : {});
+    ? { downloadedItems: Item[]; items: Item[] }
+    : {});
 
 export interface DownloadOptions {
   concurrency?: number;

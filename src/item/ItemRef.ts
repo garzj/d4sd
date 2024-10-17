@@ -7,7 +7,11 @@ import { OebvBook } from './OebvBook';
 import { ScookBook } from './ScookBook';
 
 export class ItemRef {
-  constructor(public shelf: Shelf, public url: string, public title: string) {}
+  constructor(
+    public shelf: Shelf,
+    public url: string,
+    public title: string
+  ) {}
 
   async resolve(): Promise<Item | null> {
     const page = await this.shelf.browser.newPage();
@@ -30,7 +34,7 @@ export class ItemRef {
       if (pageUrl.includes('portal.oebv.at')) {
         return new OebvBook(this.shelf, pageUrl, this.title);
       }
-    
+
       if ((await page.$('#loadPage')) != null) {
         return new DigiBook(this.shelf, pageUrl, this.title);
       }

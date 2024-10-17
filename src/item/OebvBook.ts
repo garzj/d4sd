@@ -20,7 +20,10 @@ export class OebvBook extends Book {
         waitUntil: 'networkidle2',
         timeout: this.shelf.options.timeout,
       });
-      page1Url = new URL(`content/pages/page_1/Scale4.png`, this.url).toString();
+      page1Url = new URL(
+        `content/pages/page_1/Scale4.png`,
+        this.url
+      ).toString();
       pageCount = await checkPage.$$eval(
         'footer > nav > ul > li',
         (elms) => elms.length

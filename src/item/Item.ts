@@ -6,7 +6,11 @@ import { DownloadOptions } from './download-options';
 const { mkdir } = promises;
 
 export abstract class Item {
-  constructor(public shelf: Shelf, public url: string, public title: string) {
+  constructor(
+    public shelf: Shelf,
+    public url: string,
+    public title: string
+  ) {
     this.title = sanitize(title);
   }
 

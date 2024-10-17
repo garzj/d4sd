@@ -6,7 +6,11 @@ import { Archive } from './Archive';
 import { Item } from './Item';
 
 export class DigiDoc extends Item {
-  constructor(public archive: Archive, url: string, title: string) {
+  constructor(
+    public archive: Archive,
+    url: string,
+    title: string
+  ) {
     super(archive.shelf, url, title);
   }
 
