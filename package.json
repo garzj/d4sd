@@ -1,6 +1,6 @@
 {
   "name": "d4sd",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A downloader for https://digi4school.at/.",
   "bin": {
     "d4sd": "esm/cli.js"
