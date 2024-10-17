@@ -1,6 +1,6 @@
 import { Shelf } from '../shelf/Shelf';
 import { join } from 'path';
-import sanitize = require('sanitize-filename');
+import sanitize from 'sanitize-filename';
 import { promises } from 'fs';
 import { DownloadOptions } from './download-options';
 const { mkdir } = promises;

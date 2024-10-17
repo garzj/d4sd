@@ -1,7 +1,7 @@
 import { serialize } from 'cookie';
-import { Protocol } from 'puppeteer';
+import { Cookie } from 'puppeteer';
 
-export function serializeCookies(cookies: Protocol.Network.Cookie[]): string {
+export function serializeCookies(cookies: Cookie[]): string {
   return cookies
     .map((c) =>
       serialize(c.name, c.value, {

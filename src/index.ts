@@ -11,7 +11,7 @@ import { Item } from './item/Item';
 import { ItemGroup } from './item/ItemGroup';
 import { ItemRef } from './item/ItemRef';
 import { ScookBook } from './item/ScookBook';
-import { DownloadOptions } from './item/download-options';
+import type { DownloadOptions } from './item/download-options';
 import { OebvBook } from './item/OebvBook';
 
 export {

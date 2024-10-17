@@ -12,10 +12,8 @@ import {
   string,
 } from 'cmd-ts';
 import { Shelf } from './shelf/Shelf';
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 import { minimatch } from 'minimatch';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { PaperFormat } from 'puppeteer';
 // @ts-ignore
 import { paperFormats } from 'puppeteer';
@@ -30,17 +28,13 @@ import { ItemGroup } from './item/ItemGroup';
 import { Item } from './item/Item';
 import { TraunerShelf } from './shelf/TraunerShelf';
 
-const { version } = JSON.parse(
-  readFileSync(join(__dirname, '../package.json')).toString()
-);
-
 const cmd = command({
   name: 'd4sd',
   description:
     'Digi4school Downloader\n' +
     '> Downloads books from https://digi4school.at/ and https://www.scook.at/\n' +
     '> GitHub: https://github.com/garzj/d4sd',
-  version,
+  version: process.env.npm_package_version,
   args: {
     books: restPositionals({
       displayName: 'books',
@@ -114,10 +108,9 @@ const cmd = command({
       password = args.password;
     } else {
       password = (
-        await inquirer.prompt({
-          name: 'password',
-          type: 'password',
-        })
+        await inquirer.prompt([
+          { name: 'password', type: 'password', message: 'Password:' },
+        ])
       ).password;
       console.log('');
     }

@@ -2,6 +2,8 @@
 /data/
 
 # Build
+/esm/
+/cjs/
 /lib/
 
 # Env files

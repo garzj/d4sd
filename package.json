@@ -2,42 +2,65 @@
   "name": "d4sd",
   "version": "2.0.0",
   "description": "A downloader for https://digi4school.at/.",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "bin": {
+    "d4sd": "esm/cli.js"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js",
+      "default": "./esm/index.js"
+    },
+    "./*": "./*.js"
+  },
+  "main": "./cjs/index.js",
+  "types": "./cjs/index.d.ts",
   "scripts": {
-    "build": "tsc -p .",
-    "start": "node ./lib/cli.js",
-    "deploy": "yarn build && yarn start",
-    "dev": "export NODE_ENV=development || set NODE_ENV=development&& ts-node-dev --respawn ./src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "yarn build:esm && yarn build:cjs",
+    "build:esm": "tsc --module es2022 && tsc-alias",
+    "build:cjs": "tsc --module commonjs --outDir cjs && echo '{\"type\": \"commonjs\"}' > cjs/package.json",
     "prepack": "yarn build",
-    "upgrade": "ncu -u -x @types/node-fetch -x node-fetch -x @types/inquirer -x inquirer"
+    "start": "node ./esm/cli.js",
+    "deploy": "npm run build:esm && npm start --",
+    "dev": "dotenv -v NODE_ENV=development tsx watch --clear-screen=false ./src/cli.ts --",
+    "ncu": "ncu -u -x typescript",
+    "lint": "prettier --check . '!./{,data}' && eslint",
+    "format": "prettier -w . '!./{,data}' && eslint --fix"
   },
   "author": "Johannes Garz <johannes@garz.dev> (https://garz.dev/)",
   "license": "GPL-3.0",
-  "bin": {
-    "d4sd": "lib/cli.js"
-  },
   "devDependencies": {
-    "@types/cli-progress": "^3.11.5",
+    "@types/cli-progress": "^3.11.6",
     "@types/cookie": "^0.6.0",
-    "@types/inquirer": "^8.2.2",
+    "@types/inquirer": "^9.0.7",
     "@types/minimatch": "^5.1.2",
-    "@types/node": "^20.10.5",
-    "@types/node-fetch": "^2.6.2",
-    "npm-check-updates": "^16.14.12",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.3"
+    "@types/node": "^22.7.6",
+    "@types/node-fetch": "^2.6.11",
+    "@typescript-eslint/eslint-plugin": "^8.9.0",
+    "@typescript-eslint/parser": "^8.9.0",
+    "dotenv-cli": "^7.4.2",
+    "eslint": "^9.12.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "npm-check-updates": "^17.1.4",
+    "prettier": "^3.3.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "tsc-alias": "^1.8.10",
+    "tsx": "^4.19.1",
+    "typescript": "5.5.4"
   },
   "dependencies": {
     "cli-progress": "^3.12.0",
     "cmd-ts": "^0.13.0",
-    "cookie": "^0.6.0",
-    "dotenv": "^16.3.1",
-    "inquirer": "^8.2.2",
-    "minimatch": "^9.0.3",
-    "muhammara": "^4.1.0",
-    "node-fetch": "^2.6.7",
-    "puppeteer": "^21.6.1",
+    "cookie": "^1.0.1",
+    "inquirer": "^12.0.0",
+    "minimatch": "^10.0.1",
+    "muhammara": "^5.0.2",
+    "node-fetch": "^3.3.2",
+    "puppeteer": "^23.6.0",
     "sanitize-filename": "^1.6.3"
   },
   "directories": {
