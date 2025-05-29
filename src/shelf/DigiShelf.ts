@@ -16,9 +16,9 @@ export class DigiShelf extends Shelf {
   protected async login() {
     await this.formLogin(
       '/',
-      '#email',
-      '#password',
-      '#login > button',
+      '#ion-input-0',
+      '#ion-input-1',
+      'ion-button[color="primary"]',
       (page) =>
         Promise.race([
           page
