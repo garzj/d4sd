@@ -155,32 +155,17 @@ const cmd = command({
 
         let itemRefs = bookTitles.length > 0 ? await shelf.getItems() : [];
 
-        // Drop books not specified
-        itemRefs = itemRefs.filter(
-          (ref) =>
-            bookTitles.some((title) =>
-              minimatch(ref.title, title, {
-                nocase: true,
-                dot: true,
-                noglobstar: true,
-                nocomment: true,
-              })
-            ) ||
-            bookUrls.some(
-              (url) => url.replace(/\/$/, '') === ref.url.replace(/\/$/, '')
-            )
+        itemRefs = itemRefs.filter((ref) =>
+          bookTitles.some((title) =>
+            minimatch(ref.title, title, {
+              nocase: true,
+              dot: true,
+              noglobstar: true,
+              nocomment: true,
+            }) ||
+            ref.title.toLowerCase().includes(title.toLowerCase())
+          )
         );
-
-        // Add the rest of the book urls with the url as title
-        for (const bookUrl of bookUrls) {
-          if (
-            !itemRefs.some(
-              (ref) => bookUrl.replace(/\/$/, '') === ref.url.replace(/\/$/, '')
-            )
-          ) {
-            itemRefs.push(new ItemRef(shelf, bookUrl, bookUrl));
-          }
-        }
 
         if (itemRefs.length === 0) {
           console.error(`No items matching your rules could be found.`);

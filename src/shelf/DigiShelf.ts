@@ -6,7 +6,7 @@ export class DigiShelf extends Shelf {
   static id = 'digi';
 
   private constructor() {
-    super('https://digi4school.at/');
+    super('https://digi4school.at/books');
   }
 
   static async load(options: InitOptions) {
@@ -40,28 +40,38 @@ export class DigiShelf extends Shelf {
   async getItems(): Promise<ItemRef[]> {
     const page = await this.browser.newPage();
     try {
-      await page.goto(new URL('/ebooks', this.origin).toString());
-      await page.waitForSelector('#shelf > a', {
+      await page.goto(new URL('/books', this.origin).toString());
+      await page.waitForSelector('#ebooksGrid > ion-row > ion-col', {
         timeout: this.options.timeout,
       });
 
-      const itemLinks = await page.$$('#shelf > a');
+      const itemLinks = await page.$$('#ebooksGrid > ion-row > ion-col');
 
       return await Promise.all(
         itemLinks.map(async (itemLink) => {
-          const href = await itemLink.evaluate((a) => a.href);
-          const url = new URL(href, this.origin).toString();
+          const tempSelector = await itemLink.$('ion-thumbnail')
+          
+          const uniqueSelector = await page.evaluate((el) => {
+            let path = '';
+            while (el.parentElement) {
+              const tag = el.tagName.toLowerCase();
+              const siblings = Array.from(el.parentElement.children);
+              const index = siblings.indexOf(el) + 1;
+              path = ` > ${tag}:nth-child(${index})` + path;
+              el = el.parentElement;
+            }
+            return path.slice(3);
+          }, itemLink);
 
-          const title = await itemLink.evaluate(
-            (a) => a.querySelector('h1')?.innerText
-          );
+          const title = await tempSelector?.evaluate((el) => el.getAttribute('title'))
+
           if (!title) {
             throw new ScrapeError(
-              `Could not find the title of item with url ${url}.`
+              `Could not find the title of item with url ${"test"}.`
             );
           }
 
-          return new ItemRef(this, url, title);
+          return new ItemRef(this, uniqueSelector, title);
         })
       );
     } finally {
