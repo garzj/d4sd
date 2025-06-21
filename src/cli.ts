@@ -27,6 +27,7 @@ import { ItemGroup } from './item/ItemGroup';
 import { Item } from './item/Item';
 import { TraunerShelf } from './shelf/TraunerShelf';
 import retry from 'async-retry';
+import { ItemRef } from './item/ItemRef';
 
 const cmd = command({
   name: 'd4sd',
@@ -144,7 +145,7 @@ const cmd = command({
         let bookUrls: string[] = [];
         let bookTitles: string[] = [];
         for (const book of args.books) {
-          if (book.startsWith(shelf.origin)) {
+          if (shelf.origins.some((o) => book.startsWith(o))) {
             bookUrls.push(book);
           } else {
             bookTitles.push(book);
@@ -153,19 +154,32 @@ const cmd = command({
 
         let itemRefs = bookTitles.length > 0 ? await shelf.getItems() : [];
 
-        itemRefs = itemRefs.filter((ref) =>
-          bookTitles.some(
-            (title) =>
+        // filter specified books
+        itemRefs = itemRefs.filter(
+          (ref) =>
+            bookTitles.some((title) =>
               minimatch(ref.title, title, {
                 nocase: true,
                 dot: true,
                 noglobstar: true,
                 nocomment: true,
-              }) || ref.title.toLowerCase().includes(title.toLowerCase())
-          )
+              })
+            ) ||
+            bookUrls.some(
+              (url) => url.replace(/\/$/, '') === ref.url.replace(/\/$/, '')
+            )
         );
 
-        // todo: by url?
+        // add the rest of the book urls with the url as title
+        for (const bookUrl of bookUrls) {
+          if (
+            !itemRefs.some(
+              (ref) => bookUrl.replace(/\/$/, '') === ref.url.replace(/\/$/, '')
+            )
+          ) {
+            itemRefs.push(new ItemRef(shelf, bookUrl, bookUrl));
+          }
+        }
 
         if (itemRefs.length === 0) {
           console.error(`No items matching your rules could be found.`);

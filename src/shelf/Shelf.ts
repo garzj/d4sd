@@ -14,7 +14,11 @@ export abstract class Shelf {
   options!: Options;
   browser!: puppeteer.Browser;
 
-  protected constructor(public origin: string) {}
+  public origins: string[];
+
+  protected constructor(public origin: string) {
+    this.origins = [origin];
+  }
 
   protected async init(options: InitOptions) {
     this.options = {
@@ -45,9 +49,14 @@ export abstract class Shelf {
     const page = await this.browser.newPage();
     try {
       await page.goto(new URL(url, this.origin).toString());
-      await page.waitForSelector(loginBtnSelector, {
-        timeout: this.options.timeout,
-      });
+      await page.waitForFunction(
+        (selectors: string[]) =>
+          selectors.every((s) => document.querySelector(s) !== null),
+        {
+          timeout: this.options.timeout,
+        },
+        [userSelector, passwordSelector, loginBtnSelector]
+      );
 
       await page.type(userSelector, this.options.user);
       await page.type(passwordSelector, this.options.password);

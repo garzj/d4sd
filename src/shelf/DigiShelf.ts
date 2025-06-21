@@ -6,7 +6,8 @@ export class DigiShelf extends Shelf {
   static id = 'digi';
 
   private constructor() {
-    super('https://digi4school.at/books');
+    super('https://digi4school.at/');
+    this.origins.push('https://a.digi4school.at/');
   }
 
   static async load(options: InitOptions) {
@@ -15,7 +16,7 @@ export class DigiShelf extends Shelf {
 
   protected async login() {
     await this.formLogin(
-      '/',
+      '/login',
       '#ion-input-0',
       '#ion-input-1',
       'ion-button[color="primary"]',
@@ -25,59 +26,39 @@ export class DigiShelf extends Shelf {
             .waitForNavigation({ timeout: this.options.timeout })
             .then(() => true),
           page
-            .waitForFunction(
-              () =>
-                document
-                  .querySelector('div[role="dialog"]')
-                  ?.innerHTML.includes('Problem'),
-              { timeout: this.options.timeout }
-            )
+            .waitForFunction(() => !!document.querySelector('ion-alert'), {
+              timeout: this.options.timeout,
+            })
             .then(() => false),
         ])
     );
   }
 
   async getItems(): Promise<ItemRef[]> {
+    let books: { code: number; title: string }[];
+
     const page = await this.browser.newPage();
     try {
-      await page.goto(new URL('/books', this.origin).toString());
-      await page.waitForSelector('#ebooksGrid > ion-row > ion-col', {
-        timeout: this.options.timeout,
-      });
-
-      const itemLinks = await page.$$('#ebooksGrid > ion-row > ion-col');
-
-      return await Promise.all(
-        itemLinks.map(async (itemLink) => {
-          const tempSelector = await itemLink.$('ion-thumbnail');
-
-          const uniqueSelector = await page.evaluate((el) => {
-            let path = '';
-            while (el.parentElement) {
-              const tag = el.tagName.toLowerCase();
-              const siblings = Array.from(el.parentElement.children);
-              const index = siblings.indexOf(el) + 1;
-              path = ` > ${tag}:nth-child(${index})` + path;
-              el = el.parentElement;
-            }
-            return path.slice(3);
-          }, itemLink);
-
-          const title = await tempSelector?.evaluate((el) =>
-            el.getAttribute('title')
-          );
-
-          if (!title) {
-            throw new ScrapeError(
-              `Could not find the title of item with url ${'test'}.`
-            );
-          }
-
-          return new ItemRef(this, uniqueSelector, title);
-        })
+      const res = await page.goto(
+        new URL('/br/xhr/v2/synch', this.origin).toString(),
+        { waitUntil: 'domcontentloaded' }
       );
+      if (!res || !res.ok || res.status() === 260) {
+        throw new ScrapeError('Could to retrieve list of books from the API.');
+      }
+      const data = await res.json();
+      books = data.books;
     } finally {
       await page.close();
     }
+
+    return books.map(
+      (book) =>
+        new ItemRef(
+          this,
+          new URL(`/ebook/${book.code}`, this.origin).toString(),
+          book.title
+        )
+    );
   }
 }
