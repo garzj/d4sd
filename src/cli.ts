@@ -18,7 +18,6 @@ import { PaperFormat } from 'puppeteer';
 // @ts-ignore
 import { paperFormats } from 'puppeteer';
 import { hasOwnProperty } from './util/object';
-import { ItemRef } from './item/ItemRef';
 import { ScookShelf } from './shelf/ScookShelf';
 import { DigiShelf } from './shelf/DigiShelf';
 import * as cliProgress from 'cli-progress';
@@ -97,7 +96,6 @@ const cmd = command({
     }),
   },
   handler: async (args) => {
-    paperFormats;
     if (args.format && !hasOwnProperty(paperFormats, args.format)) {
       console.error(
         `Invalid page format specified. Possible options are: ${Object.keys(
@@ -156,16 +154,18 @@ const cmd = command({
         let itemRefs = bookTitles.length > 0 ? await shelf.getItems() : [];
 
         itemRefs = itemRefs.filter((ref) =>
-          bookTitles.some((title) =>
-            minimatch(ref.title, title, {
-              nocase: true,
-              dot: true,
-              noglobstar: true,
-              nocomment: true,
-            }) ||
-            ref.title.toLowerCase().includes(title.toLowerCase())
+          bookTitles.some(
+            (title) =>
+              minimatch(ref.title, title, {
+                nocase: true,
+                dot: true,
+                noglobstar: true,
+                nocomment: true,
+              }) || ref.title.toLowerCase().includes(title.toLowerCase())
           )
         );
+
+        // todo: by url?
 
         if (itemRefs.length === 0) {
           console.error(`No items matching your rules could be found.`);

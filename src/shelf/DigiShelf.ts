@@ -49,8 +49,8 @@ export class DigiShelf extends Shelf {
 
       return await Promise.all(
         itemLinks.map(async (itemLink) => {
-          const tempSelector = await itemLink.$('ion-thumbnail')
-          
+          const tempSelector = await itemLink.$('ion-thumbnail');
+
           const uniqueSelector = await page.evaluate((el) => {
             let path = '';
             while (el.parentElement) {
@@ -63,11 +63,13 @@ export class DigiShelf extends Shelf {
             return path.slice(3);
           }, itemLink);
 
-          const title = await tempSelector?.evaluate((el) => el.getAttribute('title'))
+          const title = await tempSelector?.evaluate((el) =>
+            el.getAttribute('title')
+          );
 
           if (!title) {
             throw new ScrapeError(
-              `Could not find the title of item with url ${"test"}.`
+              `Could not find the title of item with url ${'test'}.`
             );
           }
 

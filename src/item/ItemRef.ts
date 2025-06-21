@@ -23,26 +23,32 @@ export class ItemRef {
         timeout: this.shelf.options.timeout,
       });
 
-      await page.waitForSelector(this.selector, { timeout: this.shelf.options.timeout });
-
-      const newPagePromise = new Promise<import('puppeteer').Page>((resolve) => {
-        this.shelf.browser.once('targetcreated', async (target) => {
-          if (target.type() === 'page') {
-            const newPage = await target.page();
-            if (newPage) {
-              await newPage.bringToFront();
-              resolve(newPage);
-            }
-          }
-        });
+      await page.waitForSelector(this.selector, {
+        timeout: this.shelf.options.timeout,
       });
 
+      const newPagePromise = new Promise<import('puppeteer').Page>(
+        (resolve) => {
+          this.shelf.browser.once('targetcreated', async (target) => {
+            if (target.type() === 'page') {
+              const newPage = await target.page();
+              if (newPage) {
+                await newPage.bringToFront();
+                resolve(newPage);
+              }
+            }
+          });
+        }
+      );
+
       await page.click(this.selector);
-      const newPage:any = await newPagePromise;
+      const newPage: any = await newPagePromise;
 
       await newPage.waitForLoadState?.('load').catch(() => {});
 
-      await newPage.waitForNavigation({ waitUntil: 'load', timeout: 3000 }).catch(() => {});
+      await newPage
+        .waitForNavigation({ waitUntil: 'load', timeout: 3000 })
+        .catch(() => {});
 
       const pageUrl = newPage.url();
 
@@ -70,7 +76,7 @@ export class ItemRef {
           )
         )
       ) {
-        console.log("Archive detected")
+        console.log('Archive detected');
         return new Archive(this.shelf, pageUrl, this.title);
       }
 
