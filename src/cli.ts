@@ -252,6 +252,12 @@ const cmd = command({
             try {
               await retry(() => item.download(args.outDir, options), {
                 retries: args.maxRetries,
+                onRetry(e, r) {
+                  console.error(e);
+                  console.error(
+                    `Download failed. Retrying. (${r}/${args.maxRetries})`
+                  );
+                },
               });
             } catch (e) {
               err = e;
