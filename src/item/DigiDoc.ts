@@ -37,7 +37,9 @@ export class DigiDoc extends Item {
       if (!res.body) return;
       res.body.pipe(dest);
 
-      await new Promise((resolve) => dest.once('close', resolve));
+      await new Promise((resolve) =>
+        dest.once('close', () => resolve(undefined))
+      );
     } finally {
       await page.close();
     }
