@@ -5,7 +5,6 @@
 - Download books and archives with folders and additional documents from https://digi4school.at/
 
   Supports linked books from:
-
   - Scook (https://www.scook.at/)
   - Westermann BiBox (https://bibox2.westermann.de/)
   - various others like https://hpthek.at/
